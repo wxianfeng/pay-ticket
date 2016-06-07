@@ -31,6 +31,31 @@ span {
 
 <script>
 $(function(){
+  
+  $("#submit").click(function(){
+    var $result = $("#submitResult");
+    var email = $("#email").val();
+    if (email == "") {
+      $result.text("email cant be blank!");
+      return;
+    } else {
+      $result.text("");
+    }
+
+    $.ajax({
+      url: "/save-email",
+      type: "POST",
+      data: { email: email },
+      success: function(ret){
+        if (ret.code == 0) {
+          $("p").text("Thank you, Submit success, Please check your email!");
+          $("p").css("color", "red");
+        }
+      }
+    });
+
+  });
+
 });
 </script>
 

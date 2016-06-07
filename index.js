@@ -38,6 +38,12 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+// save email
+app.post("/save-email", function(req, res){
+  console.log("==============");
+  res.send({ code: 0 });
+});
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
