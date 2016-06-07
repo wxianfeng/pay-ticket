@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/wxianfeng/pay-ticket",
   "dependencies": {
+    "dateformat": "^1.0.12",
+    "db-migrate": "0.6.1",
     "express": "3.3.8",
-    "db-migrate": "0.6.1"
+    "mysql": "^2.0.0-alpha9"
   }
 }
