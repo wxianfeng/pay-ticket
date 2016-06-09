@@ -8,6 +8,7 @@ var mysql = require('mysql');
 var fs = require('fs');
 var dateFormat = require('dateformat');
 var nodemailer = require('nodemailer');
+var crypto = require('crypto');
 
 var app = express();
 
@@ -64,8 +65,9 @@ app.post("/save-email", function(req, res){
     if (result.length == 0) { // email not exist
       var date = new Date();
       var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+      var token = crypto.randomBytes(32).toString('hex');
       console.log(date);
-      var sql = "insert into users(email, created_at, updated_at) values(\"" + email + "\", \""+  date +"\", \""+ date +"\")";
+      var sql = "insert into users(email, token, created_at, updated_at) values(\"" + email + "\", \""+  token +"\", \""+  date +"\", \""+ date +"\")";
       console.log(sql);
       connection.query(sql, {}, function(err, result){
         console.log(err);
@@ -78,17 +80,18 @@ app.post("/save-email", function(req, res){
         "The event will be consist of 3 segments within one week, which are Ethereum DevCon2, Demo Day and 2nd Global Blockchain Summit. Different types of tickets are provided for these segments. The purpose of this E-mail is to connect you with a payment system which allows you to pay for the tickets via Bitcoin or Ether. Please click one of the links below according to the ticket of your choosing, and a payment address for Ether or Bitcoin will be provided. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
         "<b>Pay by Bitcoin</b>",
         "<b>Ticket for DevCon2</b>",
-        "https://",
+        "https://localhost:3000/verify?token="+ token +"&category=bitcoin&ticket_category=2",
         "<b>Ticket for Demo Day and 2nd Global Blockchain Summit Ticket</b>",
-        "https://",
+        "https://localhost:3000/verify?token="+ token +"&category=bitcoin&ticket_category=3",
         "<b>Ticket for the Whole Week</b>",
-        "https://<br/>",
+        "https://localhost:3000/verify?token=" + token + "&category=bitcoin&ticket_category=1 <br/>",
         "<b>Pay by Ether</b>",
         "<b>Ticket for DevCon2</b>",
-        "https://",
+        "https://localhost:3000/verify?token=" + token + "&category=ether&ticket_category=2",
         "<b>Ticket for Demo Day and 2nd Global Blockchain Summit</b>",
+        "https://localhost:3000/verify?token=" + token + "&category=ether&ticket_category=3",
         "<b>Ticket for the Whole Week</b>",
-        "https://",
+        "https://localhost:3000/verify?token=" + token + "&category=ether&ticket_category=1",
         "(This E-mail is sent by an automatic system. Please do not reply directly. )"
         ].join("<br/>");
 
