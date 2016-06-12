@@ -13,3 +13,15 @@ https://blockchain.info/q/addressbalance/asd?confirmations=1
 
 这个 API 的限制是每秒最多五次，不用轮询得特别频繁，十秒一次应该 OK 了。
 ```
+
+## 比特币地址
+```
+之前文档里面应该告诉你地址的例子的
+
+比特币的地址长这样: 1EzwoHtiXB4iFwedPr49iywjZn2nnekhoj
+以太币的地址长这样: 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae
+
+比特币的那个有 Checksum 所以乱写肯定不行
+
+比如这个 1JZiRzqpCSqeKZvCaRJZMKmuFhu1gFzaRz 就是正确的地址
+```
