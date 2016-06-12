@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var mysql = require('mysql');
+var fs = require('fs');
+
+var dbContent = fs.readFileSync(__dirname + "/database.json", "utf8");
+var databaseCfg = JSON.parse(dbContent);
+var dev = databaseCfg.development;
+
+var connection = mysql.createConnection({
+  host     : dev.host,
+  user     : dev.user,
+  password : dev.password,
+  database: dev.database
+});
+
+connection.connect();
+
+connection.query("select * from invoices", function(err, result){
+  console.log(result);
+});

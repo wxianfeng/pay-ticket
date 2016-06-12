@@ -7,7 +7,7 @@ exports.up = function(db, callback) {
     user_id: { type: 'int', unique: true, notNull: true },
     fee: 'string',
     category: { type: 'string', defaultValue: 'bitcoin' },// 付款方式 bitcoin, ether
-    state: { type: 'string', defaultValue: 'unpay' }, // unpay: 未付款, payed: 已付款
+    state: { type: 'string', defaultValue: 'unpay' }, // unpay: 未付款, payed: 已付款, expired: 过期
     code: 'string',
     created_at: 'datetime',
     updated_at: 'datetime'
