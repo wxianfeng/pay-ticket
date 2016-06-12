@@ -17,6 +17,25 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-connection.query("select * from invoices", function(err, result){
+function setExpired(id) {
+  connection.query("update invoices set state = \"" + "expired" + "\" where id=?", id, function(err, result){
+
+  });
+}
+
+connection.query("select * from invoices where state = \""+ "unpay" +"\"", {}, function(err, result){
   console.log(result);
+  if (result.length > 0){
+    for (var i = 0; i < result.length; i++) {
+      var ele = result[i];
+
+      var now = 1432424234;
+      var created = ele.created_at;
+      if (now - created > 24 * 3600) {
+        setExpired(ele.id);
+      }
+    }
+  }
 });
+
+connection.end();

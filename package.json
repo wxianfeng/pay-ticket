@@ -21,6 +21,7 @@
     "db-migrate": "0.6.1",
     "express": "3.3.8",
     "mysql": "^2.0.0-alpha9",
-    "nodemailer": "^2.4.2"
+    "nodemailer": "^2.4.2",
+    "request": "^2.72.0"
   }
 }
