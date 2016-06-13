@@ -15,12 +15,12 @@ pay ticket by BitCoin
   
   3. create db
   ```
-  db-migrate db:create pay-ticket_development
+  db-migrate db:create pay-ticket_production
   ```
   
   4. create tables
   ```
-  db-migrate up -e development
+  db-migrate up -e production
   ```
   
   5. start Server
