@@ -15,7 +15,8 @@ pay ticket by BitCoin
   
   3. create db
   ```
-  db-migrate db:create pay-ticket_production
+  mysql -uroot -p
+  create database pay-ticket_production
   ```
   
   4. create tables

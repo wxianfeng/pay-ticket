@@ -97,7 +97,7 @@ app.post("/save-email", function(req, res){
 
         var mailOptions = {
           from: '"Pay-Ticket" <wxianfeng@wxianfeng.com>', // sender address
-          to: '522096432@qq.com', // list of receivers
+          to: email, // list of receivers
           subject: 'You’ve placed an order for tickets of the Shanghai Global Blockchain Week.', // Subject line
           html: content
         };
@@ -128,7 +128,7 @@ app.get("/verify", function(req, res){
   if (undefined == token)
     token = "";
 
-  connection.query("select 1 from users where token = ?", token, function(err, result){
+  connection.query("select * from users where token = ?", token, function(err, result){
     console.log(err);
     console.log(result);
     if (result.length == 0) {
@@ -147,7 +147,7 @@ app.get("/verify", function(req, res){
 
     var mailOptions = {
       from: '"Pay-Ticket" <wxianfeng@wxianfeng.com>', // sender address
-      to: '522096432@qq.com', // list of receivers
+      to: result[0].email, // list of receivers
       subject: 'Please finish the payment for the ticket of Shanghai Blockchain Week.', // Subject line
       html: content
     };
