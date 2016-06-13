@@ -20,7 +20,7 @@ pay ticket by BitCoin
   
   4. create tables
   ```
-  db-migrate up -e production
+  db-migrate up -e development
   ```
   
   5. start Server
