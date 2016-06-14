@@ -123,104 +123,122 @@ app.get("/verify", function(req, res) {
   if (undefined == token)
     token = "";
 
+  var address;
+  var amount;
+  var date = new Date();
+  var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+  if (date <= "2016-07-31 24:00:00") {
+    if (category == 'bitcoin') {
+      switch (ticket_category) {
+        case "1":
+          amount = 1500;
+          break;
+        case "2":
+          amount = 900;
+          break;
+        case "3":
+          amount = 900;
+      }
+    }
+  } else {
+    if (category == 'bitcoin') {
+      switch (ticket_category) {
+        case "1":
+          amount = 2000;
+          break;
+        case "2":
+          amount = 1200;
+          break;
+        case "3":
+          amount = 1200;
+      }
+    }
+  }
+
+  var content = [
+    "Dear Guests,",
+    "You’ve ordered Ticket Name and choosed to pay by <b>"+ category +"</b> ",
+    "the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ amount +" </b>.",
+    "Please finish the payment in 12 hours. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
+    
+  ].join("<br/>");
+
   connection.query("select * from users where token = ?", token, function(err, result) {
     if (err)
       console.log(err);
     
     if (result.length == 0) {
       res.send("verify fail!");
-      return
+      return;
     }
 
     var receiver = result[0].email;
     var user_id = result[0].id;
 
-    connection.query("select * from invoices where user_id = "+ user_id +" AND category = \""+ category +"\" AND ticket_category = \""+ ticket_category +"\"", function(err, result){
+    connection.query("select * from invoices where user_id = "+ user_id +" AND category = \""+ category +"\" AND ticket_category = \""+ ticket_category +"\"" + " order by created_at desc limit 1", function(err, result){
       if (err)
         console.log(err);
 
+      console.log(result);
+
+      var invoice = result[0];
+
       if (result.length != 0) { // 找到 invoice 记录
+        if (invoice.state == 'payed') {
+          res.send("you have payed");
+          return;
+        } else if (invoice.state == 'unpay') { // 之前未付款, 继续使用这个 address
+          address = invoice.address;
+          content = content.replace(/{address}/, address);
 
-      }
-    });
-
-    connection.query("select * from address where state = ? and user_id is NULL limit 1", "unused", function(err, result) {
-      var address = result[0].hash_code;
-      var date = new Date();
-      var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
-      var amount;
-      if (date <= "2016-07-31 24:00:00") {
-        if (category == 'bitcoin') {
-          switch (ticket_category) {
-            case "1":
-              amount = 1500;
-              break;
-            case "2":
-              amount = 900;
-              break;
-            case "3":
-              amount = 900;
-          }
-        }
-      } else {
-        if (category == 'bitcoin') {
-          switch (ticket_category) {
-            case "1":
-              amount = 2000;
-              break;
-            case "2":
-              amount = 1200;
-              break;
-            case "3":
-              amount = 1200;
-          }
+          sendSecondMail(receiver, content);
+          var html_content = content + "A copy of this invoice has been sent to your email.";
+          res.send(html_content);
+          return;
         }
       }
 
-      var content = [
-        "Dear Guests,",
-        "You’ve ordered Ticket Name and choosed to pay by <b>"+ category +"</b> ",
-        "the payment address is <b>"+ address +"</b> , the amount should be <b>"+ amount +" </b>.",
-        "Please finish the payment in 12 hours. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
-        
-      ].join("<br/>");
+      // 未找到 invoice 记录, 取个 address, 生成 invoice
+      connection.query("select * from address where state = ? and user_id is NULL limit 1", "unused", function(err, result) {
+        address = result[0].hash_code;
 
-      var html_content = content + "A copy of this invoice has been sent to your email.";
+        content = content.replace(/{address}/, address);
 
-      var email_content = content + "(This E-mail is sent by an automatic system. Please do not reply directly. )";
+        var html_content = content + "A copy of this invoice has been sent to your email.";
 
-      var mailOptions = {
-        from: '"Pay-Ticket" <'+ config.emailUser +'>',
-        to: receiver, 
-        subject: 'Please finish the payment for the ticket of Shanghai Blockchain Week.', // Subject line
-        html: email_content
-      };
+        var email_content = content + "(This E-mail is sent by an automatic system. Please do not reply directly. )";
 
-      transporter.sendMail(mailOptions, function(error, info) {
-        console.log('Message sent: ' + info.response);
-      });
+        sendSecondMail(receiver, email_content);
 
-      var invoice_sql = "insert into invoices(user_id, fee, category, ticket_category, created_at, updated_at) values(
-      "+ user_id +",
-      \""+ amount +"\",
-      \""+ category +"\",
-      \""+ ticket_category +"\",
-      \""+ date +"\",
-      \""+ date +"\"
-      )";
-      connection.query(invoice_sql, function(err, result){
-        if (err)
-          console.log(err);
-      });
+        var invoice_sql = "insert into invoices(user_id, address, fee, category, ticket_category, created_at, updated_at) values("+ user_id +",\""+ address +"\",\""+ amount +"\",\""+ category +"\",\""+ ticket_category +"\",\""+ date +"\",\""+ date +"\")";
+        connection.query(invoice_sql, function(err, result){
+          if (err)
+            console.log(err);
+        });
 
-      res.send(html_content);
+        res.send(html_content);
 
     })
 
+
+    });
     
   });
 
 });
+
+function sendSecondMail(receiver, email_content) {
+  var mailOptions = {
+    from: '"Pay-Ticket" <'+ config.emailUser +'>',
+    to: receiver, 
+    subject: 'Please finish the payment for the ticket of Shanghai Blockchain Week.', // Subject line
+    html: email_content
+  };
+
+  transporter.sendMail(mailOptions, function(error, info) {
+    console.log('Message sent: ' + info.response);
+  });
+}
 
 // create server
 http.createServer(app).listen(app.get('port'), function(){
