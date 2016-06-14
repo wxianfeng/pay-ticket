@@ -16,7 +16,7 @@ pay ticket by BitCoin
   3. create db
   ```
   >mysql -uroot -p
-  >create database pay-ticket_production
+  >create database pay_production
   ```
   
   4. create tables
