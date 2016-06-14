@@ -1,3 +1,7 @@
+要求
+====
+[TOC]
+
 ## 查询 bitcoin 付款信息
 https://blockchain.info/q/addressbalance/asd?confirmations=1
 
@@ -24,4 +28,27 @@ https://blockchain.info/q/addressbalance/asd?confirmations=1
 比特币的那个有 Checksum 所以乱写肯定不行
 
 比如这个 1JZiRzqpCSqeKZvCaRJZMKmuFhu1gFzaRz 就是正确的地址
+```
+
+## 票价
+```
+票有三种，还有两个时间段的价格（单位是人民币）
+
+          Early bird | Regular
+DEVCON2      5800       7800  
+SUMMIT       5800       7800  
+WHOLE WEEK   9800      12800  
+
+2016-7-31 之前（包括当天）算 early bird. 之后算 regular.
+
+美元价格用这个
+
+DEVCON2          900       1200  
+SUMMIT             900       1200  
+WHOLE WEEK   1500      2000
+```
+
+## 上线 domain
+```
+链接的话 server name 都是 payment.blockchainweek2016.org , 不过还是不要 hard code 进去。
 ```

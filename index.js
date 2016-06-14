@@ -8,13 +8,15 @@ var dateFormat = require('dateformat');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
 
+var config = require('./config/config')
+
 // email init
 var smtpConfig = {
-    host: 'smtp.exmail.qq.com',
-    port: 25,
+    host: config.emailServer,
+    port: config.emailPort,
     auth: {
-        user: 'wxianfeng@wxianfeng.com',
-        pass: 'wxf19860104'
+      user: config.emailUser,
+      pass: config.emailPwd
     }
 };
 var transporter = nodemailer.createTransport(smtpConfig);

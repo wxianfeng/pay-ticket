@@ -1,0 +1,12 @@
+var config = {
+
+domain: "http://localhost:3000",
+
+emailServer: 'smtp.exmail.qq.com',
+emailPort: 25,
+emailUser: 'user@domain.com',
+emailPwd: 'input your password'
+
+};
+
+module.exports = config;
