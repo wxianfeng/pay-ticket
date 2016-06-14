@@ -7,7 +7,7 @@ exports.up = function(db, callback) {
     id: { type: 'int', primarykey: true, autoIncrement: true },
     user_id: 'int',
     state: { type: 'string', defaultValue: 'unused' }, // unused: 未使用, used: 已使用
-    has_code: 'string',
+    hash_code: 'string',
     created_at: 'datetime',
     updated_at: 'datetime'
   },callback);
