@@ -1,3 +1,4 @@
+// 用户表
 var dbm = require('db-migrate');
 var type = dbm.dataType;
 

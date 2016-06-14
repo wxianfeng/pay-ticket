@@ -1,3 +1,4 @@
+// 付款地址枚举表
 var dbm = require('db-migrate');
 var type = dbm.dataType;
 
