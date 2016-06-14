@@ -1,6 +1,4 @@
-/**
- * Module dependencies.
- */
+// require module
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -10,8 +8,7 @@ var dateFormat = require('dateformat');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
 
-var app = express();
-
+// email init
 var smtpConfig = {
     host: 'smtp.exmail.qq.com',
     port: 25,
@@ -20,15 +17,11 @@ var smtpConfig = {
         pass: 'wxf19860104'
     }
 };
-
 var transporter = nodemailer.createTransport(smtpConfig);
 
-// var transporter = nodemailer.createTransport('smtps://lecai360%40gmail.com:www.lecai360.com@smtp.gmail.com');
-
-// all environments
+// express init
+var app = express();
 app.set('port', process.env.PORT || 3000);
-// app.set('views', __dirname + '/views');
-// app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -36,17 +29,16 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+// mysql init
 var dbContent = fs.readFileSync(__dirname + "/database.json", "utf8");
 var databaseCfg = JSON.parse(dbContent);
 var dev = databaseCfg.development;
-
 var connection = mysql.createConnection({
   host     : dev.host,
   user     : dev.user,
   password : dev.password,
   database: dev.database
 });
-
 connection.connect();
 
 // development only
@@ -171,6 +163,7 @@ app.get("/verify", function(req, res){
 
 });
 
+// create server
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

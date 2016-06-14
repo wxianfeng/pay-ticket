@@ -5,7 +5,7 @@ var type = dbm.dataType;
 exports.up = function(db, callback) {
   db.createTable("address",{
     id: { type: 'int', primarykey: true, autoIncrement: true },
-    user_id: { type: 'int', unique: true, notNull: true },
+    user_id: 'int',
     state: { type: 'string', defaultValue: 'unused' }, // unused: 未使用, used: 已使用
     has_code: 'string',
     created_at: 'datetime',
