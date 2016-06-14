@@ -4,7 +4,7 @@
     "user": "root",
     "password": "",
     "host": "localhost",
-    "database": "pay-ticket_development"
+    "database": "pay_development"
   },
 
   "test":{},
@@ -14,6 +14,6 @@
     "user": "root",
     "password": "root",
     "host": "localhost",
-    "database": "pay-ticket_production"
+    "database": "pay_production"
   }
 }
