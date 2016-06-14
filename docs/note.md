@@ -3,7 +3,7 @@
 [TOC]
 
 ## 查询 bitcoin 付款信息
-https://blockchain.info/q/addressbalance/asd?confirmations=1
+https://blockchain.info/q/addressbalance/186kUYv9kEXTkALdkNgeBwCkFaUoD1qVzP?confirmations=1
 
 ## 以太坊 付款查询
 ```
@@ -51,4 +51,7 @@ WHOLE WEEK   1500      2000
 ## 上线 domain
 ```
 链接的话 server name 都是 payment.blockchainweek2016.org , 不过还是不要 hard code 进去。
+
+主页地址:
+http://blockchainweek2016.org/index_en.html
 ```
