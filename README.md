@@ -5,32 +5,44 @@ pay ticket by BitCoin
 
   1. install node modules
   ```
-  npm install
+  >npm install
   ```
   
   2. config db
   ```
-  config database.json
+  modify database.json
   ```
   
   3. create db
   ```
-  mysql -uroot -p
-  create database pay-ticket_production
+  >mysql -uroot -p
+  >create database pay-ticket_production
   ```
   
   4. create tables
   ```
-  db-migrate up -e production
+  >db-migrate up -e production
+  ```
+
+  5. config mail server && domain
+  ```
+  >cp config/config.js.sample config/config.js
+  modify config.js
+  ```
+
+  6. import address && import code
+  ```
+  >./import_address
+  >./import_code
   ```
   
-  5. start Server
+  7. start Server
   ```
-  node index
+  >node index
   ```
   now you can visit: http://localhost:3000
   
-  6. config crontab
+  8. config crontab
   ```
   *     *    *   *    *   /path/to/check_pay # every 10minutes execute 1 time
   *     1    *   *    *   /path/export_csv  # every day 1:00AM execute
