@@ -10,6 +10,8 @@ var crypto = require('crypto');
 
 var config = require('./config/config')
 
+var domain = config.domain;
+
 // email init
 var smtpConfig = {
     host: config.emailServer,
@@ -74,18 +76,18 @@ app.post("/save-email", function(req, res){
         "The event will be consist of 3 segments within one week, which are Ethereum DevCon2, Demo Day and 2nd Global Blockchain Summit. Different types of tickets are provided for these segments. The purpose of this E-mail is to connect you with a payment system which allows you to pay for the tickets via Bitcoin or Ether. Please click one of the links below according to the ticket of your choosing, and a payment address for Ether or Bitcoin will be provided. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
         "<b>Pay by Bitcoin</b>",
         "<b>Ticket for DevCon2</b>",
-        "http://localhost:3000/verify?token="+ token +"&category=bitcoin&ticket_category=2",
+        domain + "/verify?token="+ token +"&category=bitcoin&ticket_category=2",
         "<b>Ticket for Demo Day and 2nd Global Blockchain Summit Ticket</b>",
-        "http://localhost:3000/verify?token="+ token +"&category=bitcoin&ticket_category=3",
+        domain + "/verify?token="+ token +"&category=bitcoin&ticket_category=3",
         "<b>Ticket for the Whole Week</b>",
-        "http://localhost:3000/verify?token=" + token + "&category=bitcoin&ticket_category=1 <br/>",
+        domain + "/verify?token=" + token + "&category=bitcoin&ticket_category=1 <br/>",
         "<b>Pay by Ether</b>",
         "<b>Ticket for DevCon2</b>",
-        "http://localhost:3000/verify?token=" + token + "&category=ether&ticket_category=2",
+        domain + "/verify?token=" + token + "&category=ether&ticket_category=2",
         "<b>Ticket for Demo Day and 2nd Global Blockchain Summit</b>",
-        "http://localhost:3000/verify?token=" + token + "&category=ether&ticket_category=3",
+        domain + "/verify?token=" + token + "&category=ether&ticket_category=3",
         "<b>Ticket for the Whole Week</b>",
-        "http://localhost:3000/verify?token=" + token + "&category=ether&ticket_category=1 <br/>",
+        domain + "/verify?token=" + token + "&category=ether&ticket_category=1 <br/>",
         "(This E-mail is sent by an automatic system. Please do not reply directly. )"
         ].join("<br/>");
 
