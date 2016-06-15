@@ -4,6 +4,9 @@ var path = require('path');
 var mysql = require('mysql');
 var fs = require('fs');
 var request = require("request");
+var dateFormat = require('dateformat');
+
+var config = require('./config/config')
 
 var dbContent = fs.readFileSync(__dirname + "/database.json", "utf8");
 var databaseCfg = JSON.parse(dbContent);
@@ -20,26 +23,80 @@ connection.connect();
 
 function setExpired(id) {
   connection.query("update invoices set state = \"" + "expired" + "\" where id=?", id, function(err, result){
-
+    if (err)
+      console.log(err);
   });
 }
 
+function sendThirdMail(receiver, email_content) {
+  var mailOptions = {
+    from: '"Pay-Ticket" <'+ config.emailUser +'>',
+    to: receiver, 
+    subject: 'Your payment has been confirmed. Please claim your ticket of the Shanghai Blockchain Week.',
+    html: email_content
+  };
+
+  transporter.sendMail(mailOptions, function(error, info) {
+    console.log('Message sent: ' + info.response);
+  });
+}
+
+function setCodeUsed(id) {
+  connection.query("update codes set state = ? where id = "+ id +"", "used", function(err, result){
+    if (err)
+      console.log(err);
+  })
+}
+
 connection.query("select * from invoices where state = \""+ "unpay" +"\"", {}, function(err, result){
-  console.log(result);
-  if (result.length > 0){
+  if (err)
+    console.log(err);
+
+  if (result.length > 0) {
     for (var i = 0; i < result.length; i++) {
       var ele = result[i];
 
-      request('https://blockchain.info/q/addressbalance/asfdfgdgdgjshdkhskdhgxcvdgdsgf?confirmations=1', function (error, response, body) {
+      request("https://blockchain.info/q/addressbalance/" + ele.address + "?confirmations=1", function (error, response, body) {
         // console.log(error);
         // console.log(response);
-        var now = 1432424234;
-        var created = ele.created_at;
+        var date = new Date();
+        var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+        var now_t =Date.parse(date.replace(/-/g, "/"));
+        var created_at_t = Date.parse(ele.created_at.toString().replace(/-/g, "/"));
+
+        var get_amount = body;
+
+        var ticket_name;
+
+        if (ele.ticket_cagory == "1") {
+          ticket_name = "WHOLE WEEK";
+        } else if (ele.ticket_cagory == "2") {
+          ticket_name = "DEVCON2";
+        } else if (ele.ticket_cagory == "3") {
+          ticket_name = "SUMMIT";
+        }
         
-        // TODO: 检查付款成功, 并发送第三封邮件
-        if (!error && response.statusCode == 200) {
-          console.log(body) // Show the body.
-        } else if (now - created > 24 * 3600) {
+        if (get_amount >= ele.fee) { // 付款成功, 发送第三封邮件
+
+          connection.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
+            if (err)
+              console.log("get code ==============>" + err);
+            var code = result[0];
+
+            var content = [
+            "Dear Guests,",
+            "You’ve ordered the  ticket name "+ ticket_name +" and your payment has been confirmed. The coupon code "+ code.code +"  can be used to claim your ticket on our Event Dove page .",
+            "Note: This coupon code can only be used once. Please do not reveal it to anybody else.<br/>",
+            "(This E-mail is sent by an automatic system. Please do not reply directly. )"
+            ].join("<br/>");
+
+            sendThirdMail(receiver, content);
+
+            setCodeUsed(code.id);
+
+          })
+
+        } else if (now_t - created_at_t > 24 * 3600) { // over 24hrs, set expired
           setExpired(ele.id);
         }
 

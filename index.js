@@ -231,6 +231,8 @@ app.get("/verify", function(req, res) {
             console.log(err);
         });
 
+        setAddressUsed(result[0].id);
+
         res.send(html_content);
 
     })
@@ -241,6 +243,13 @@ app.get("/verify", function(req, res) {
   });
 
 });
+
+function setAddressUsed(id) {
+  connection.query("update address set state = ? where id = "+ id +"", "used", function(err, result){
+    if (err)
+      console.log(err);
+  })
+}
 
 function sendFirstMail(receiver, email_content) {
   var mailOptions = {
