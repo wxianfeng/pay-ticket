@@ -7,6 +7,7 @@ var fs = require('fs');
 var dateFormat = require('dateformat');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
+var rp = require('request-promise');
 
 var config = require('./config/config')
 
@@ -131,13 +132,23 @@ app.get("/verify", function(req, res) {
     if (category == 'bitcoin') {
       switch (ticket_category) {
         case "1":
-          amount = 1500;
+          rp("https://blockchain.info/tobtc?currency=USD&value=1500")
+          .then(function(coin){
+            amount = coin;
+          })
           break;
         case "2":
-          amount = 900;
+          rp("http://blockchain.info/tobtc?currency=USD&value=900")
+          .then(function(coin){
+            console.log("coin:" + coin);
+            amount = coin;
+          })
           break;
         case "3":
-          amount = 900;
+          rp("https://blockchain.info/tobtc?currency=USD&value=900")
+          .then(function(coin){
+            amount = coin;
+          })
       }
     }
   } else {
@@ -154,6 +165,8 @@ app.get("/verify", function(req, res) {
       }
     }
   }
+
+  console.log(amount);
 
   var content = [
     "Dear Guests,",
