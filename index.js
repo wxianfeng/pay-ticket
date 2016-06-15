@@ -8,6 +8,7 @@ var dateFormat = require('dateformat');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
 var rp = require('request-promise');
+var requestSync = require('urllib-sync').request;
 
 var config = require('./config/config')
 
@@ -132,36 +133,32 @@ app.get("/verify", function(req, res) {
     if (category == 'bitcoin') {
       switch (ticket_category) {
         case "1":
-          rp("https://blockchain.info/tobtc?currency=USD&value=1500")
-          .then(function(coin){
-            amount = coin;
-          })
+          var resp = requestSync("http://blockchain.info/tobtc?currency=USD&value=1500");
+          amount = resp.data;
           break;
         case "2":
-          rp("http://blockchain.info/tobtc?currency=USD&value=900")
-          .then(function(coin){
-            console.log("coin:" + coin);
-            amount = coin;
-          })
+          var resp = requestSync("http://blockchain.info/tobtc?currency=USD&value=900");
+          amount = resp.data;
           break;
         case "3":
-          rp("https://blockchain.info/tobtc?currency=USD&value=900")
-          .then(function(coin){
-            amount = coin;
-          })
+          var resp = requestSync("http://blockchain.info/tobtc?currency=USD&value=900");
+          amount = resp.data;
       }
     }
   } else {
     if (category == 'bitcoin') {
       switch (ticket_category) {
         case "1":
-          amount = 2000;
+          var resp = requestSync("http://blockchain.info/tobtc?currency=USD&value=2000");
+          amount = resp.data;
           break;
         case "2":
-          amount = 1200;
+          var resp = requestSync("http://blockchain.info/tobtc?currency=USD&value=1200");
+          amount = resp.data;
           break;
         case "3":
-          amount = 1200;
+          var resp = requestSync("http://blockchain.info/tobtc?currency=USD&value=1200");
+          amount = resp.data;
       }
     }
   }
