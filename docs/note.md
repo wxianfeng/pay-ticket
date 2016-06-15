@@ -2,6 +2,13 @@
 ====
 [TOC]
 
+## TODO
+```
+现在还有几点。Email, 要检查一下。现在随便填什么都可以...
+另外 Email 提交了一次就不会再发邮件，这个感觉不太好。用时间检查一下吧，如果两次提交间隔超过 60s 就重发一次。
+另外邮件的 HTML 能稍微整好看点么，就是昨天说的, 现在是 plain text
+```
+
 ## 查询 bitcoin 付款信息
 https://blockchain.info/q/addressbalance/186kUYv9kEXTkALdkNgeBwCkFaUoD1qVzP?confirmations=1
 

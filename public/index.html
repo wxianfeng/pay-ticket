@@ -50,6 +50,8 @@ $(function(){
         if (ret.code == 0) {
           $("p").text("Thank you, Submit success, Please check your email!");
           $("p").css("color", "red");
+        } else {
+          $result.text(ret.msg);
         }
       }
     });

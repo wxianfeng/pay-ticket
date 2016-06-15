@@ -55,59 +55,64 @@ if ('development' == app.get('env')) {
 // save email and send first email
 app.post("/save-email", function(req, res){
   var email = req.param('email');
-  connection.query("select 1 from users where email = ?", email, function(err, result){
-    console.log(err);
-    console.log(result);
-    console.log("-----------------------");
+  if (/^(.+)@(.+)$/.test(email)) {
+  } else {
+    res.send({ code: 1, msg: 'email format is error' });
+    return;
+  }
+
+  connection.query("select * from users where email = ?", email, function(err, result) {
+    if (err)
+      console.log(err);
+    var user = result[0];
+
+    var date = new Date();
+    var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+
+    var content = [
+    "Dear Guests,",
+    "You’ve placed an order for tickets of the Shanghai Global Blockchain Week.",
+    "(Please ignore this E-mail if you had not ordered such tickets.)",
+    "The event will be consist of 3 segments within one week, which are Ethereum DevCon2, Demo Day and 2nd Global Blockchain Summit. Different types of tickets are provided for these segments. The purpose of this E-mail is to connect you with a payment system which allows you to pay for the tickets via Bitcoin or Ether. Please click one of the links below according to the ticket of your choosing, and a payment address for Ether or Bitcoin will be provided. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
+    "<b>Pay by Bitcoin</b>",
+    "<b>Ticket for DevCon2</b>",
+    domain + "/verify?token="+ "{token}" +"&category=bitcoin&ticket_category=2",
+    "<b>Ticket for Demo Day and 2nd Global Blockchain Summit Ticket</b>",
+    domain + "/verify?token="+ "{token}" +"&category=bitcoin&ticket_category=3",
+    "<b>Ticket for the Whole Week</b>",
+    domain + "/verify?token=" + "{token}" + "&category=bitcoin&ticket_category=1 <br/>",
+    "<b>Pay by Ether</b>",
+    "<b>Ticket for DevCon2</b>",
+    domain + "/verify?token=" + "{token}" + "&category=ether&ticket_category=2",
+    "<b>Ticket for Demo Day and 2nd Global Blockchain Summit</b>",
+    domain + "/verify?token=" + "{token}" + "&category=ether&ticket_category=3",
+    "<b>Ticket for the Whole Week</b>",
+    domain + "/verify?token=" + "{token}" + "&category=ether&ticket_category=1 <br/>",
+    "(This E-mail is sent by an automatic system. Please do not reply directly. )"
+    ].join("<br/>");
 
     if (result.length == 0) { // email not exist
-      var date = new Date();
-      var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+
       var token = crypto.randomBytes(32).toString('hex');
       console.log(date);
       var sql = "insert into users(email, token, created_at, updated_at) values(\"" + email + "\", \""+  token +"\", \""+  date +"\", \""+ date +"\")";
       console.log(sql);
       connection.query(sql, {}, function(err, result){
-        console.log(err);
-        console.log(result);
+        if (err)
+          console.log(err);
 
-        var content = [
-        "Dear Guests,",
-        "You’ve placed an order for tickets of the Shanghai Global Blockchain Week.",
-        "(Please ignore this E-mail if you had not ordered such tickets.)",
-        "The event will be consist of 3 segments within one week, which are Ethereum DevCon2, Demo Day and 2nd Global Blockchain Summit. Different types of tickets are provided for these segments. The purpose of this E-mail is to connect you with a payment system which allows you to pay for the tickets via Bitcoin or Ether. Please click one of the links below according to the ticket of your choosing, and a payment address for Ether or Bitcoin will be provided. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
-        "<b>Pay by Bitcoin</b>",
-        "<b>Ticket for DevCon2</b>",
-        domain + "/verify?token="+ token +"&category=bitcoin&ticket_category=2",
-        "<b>Ticket for Demo Day and 2nd Global Blockchain Summit Ticket</b>",
-        domain + "/verify?token="+ token +"&category=bitcoin&ticket_category=3",
-        "<b>Ticket for the Whole Week</b>",
-        domain + "/verify?token=" + token + "&category=bitcoin&ticket_category=1 <br/>",
-        "<b>Pay by Ether</b>",
-        "<b>Ticket for DevCon2</b>",
-        domain + "/verify?token=" + token + "&category=ether&ticket_category=2",
-        "<b>Ticket for Demo Day and 2nd Global Blockchain Summit</b>",
-        domain + "/verify?token=" + token + "&category=ether&ticket_category=3",
-        "<b>Ticket for the Whole Week</b>",
-        domain + "/verify?token=" + token + "&category=ether&ticket_category=1 <br/>",
-        "(This E-mail is sent by an automatic system. Please do not reply directly. )"
-        ].join("<br/>");
+        content = content.replace(/{token}/g, token);
 
-        var mailOptions = {
-          from: '"Pay-Ticket" <' + config.emailUser + '>',
-          to: email,
-          subject: 'You’ve placed an order for tickets of the Shanghai Global Blockchain Week.',
-          html: content
-        };
-
-        transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-          return console.log(error);
-        }
-          console.log('Message sent: ' + info.response);
-        });
+        sendFirstMail(email, content);
 
       });
+    } else {
+      var now_t = Date.parse(date.replace(/-/g, "/"));
+      var created_at_t = Date.parse(user.created_at.toString().replace(/-/g, "/"));
+      if (now_t - created_at_t > 60) {
+        content = content.replace(/{token}/g, user.token);
+        sendFirstMail(email, content);
+      }
     }
 
     res.send({ code: 0 });
@@ -236,6 +241,19 @@ app.get("/verify", function(req, res) {
   });
 
 });
+
+function sendFirstMail(receiver, email_content) {
+  var mailOptions = {
+    from: '"Pay-Ticket" <' + config.emailUser + '>',
+    to: receiver,
+    subject: 'You’ve placed an order for tickets of the Shanghai Global Blockchain Week.',
+    html: email_content
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    console.log('Message sent: ' + info.response);
+  });
+}
 
 function sendSecondMail(receiver, email_content) {
   var mailOptions = {
