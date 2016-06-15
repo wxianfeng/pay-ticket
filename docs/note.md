@@ -5,6 +5,11 @@
 ## 查询 bitcoin 付款信息
 https://blockchain.info/q/addressbalance/186kUYv9kEXTkALdkNgeBwCkFaUoD1qVzP?confirmations=1
 
+## 查询 bitcoin 和 美元汇率
+```
+https://blockchain.info/tobtc?currency=USD&value=500
+```
+
 ## 以太坊 付款查询
 ```
 以太坊的价格用 https://api.etherscan.io/api?module=stats&action=ethprice&apikey=2UCZJ8BPCIJU7C24BPVX59JDHTRTDUS4GD 查，result 里面 ethusd 那一项是 1 ETH 对应于多少 USD. 需要做个除法来计算具体的金额
