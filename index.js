@@ -244,6 +244,8 @@ app.get("/verify", function(req, res) {
         }
       }
 
+      console.log("========================>");
+
       // 未找到 invoice 记录, 取个 address, 生成 invoice
       connection.query("select * from address where state = ? and user_id is NULL limit 1", "unused", function(err, result) {
         address = result[0].hash_code;
@@ -256,7 +258,7 @@ app.get("/verify", function(req, res) {
 
         sendSecondMail(receiver, email_content);
 
-        var invoice_sql = "insert into invoices(user_id, email, address, fee, category, ticket_category, created_at, updated_at) values("+ user_id +",\"" + receiver + ",\"" + address +"\",\""+ amount +"\",\""+ category +"\",\""+ ticket_category +"\",\""+ date +"\",\""+ date +"\")";
+        var invoice_sql = "insert into invoices(user_id, email, address, fee, category, ticket_category, created_at, updated_at) values("+ user_id +",\"" + receiver + "\",\"" + address +"\",\""+ amount +"\",\""+ category +"\",\""+ ticket_category +"\",\""+ date +"\",\""+ date +"\")";
         connection.query(invoice_sql, function(err, result){
           if (err)
             console.log(err);

@@ -213,11 +213,13 @@ function start() {
 
 
       }
-    }
+    } else {
+      connection.end();
+    } 
 
   });
   
-  // connection.end();
+  
 }
 
 start();
