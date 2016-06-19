@@ -45,9 +45,3 @@ fs.readFile(address_path, 'utf8', function (err,data) {
   insertDB(array);
   return;
 });
-
-
-
-
-
-
