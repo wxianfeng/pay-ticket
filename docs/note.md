@@ -16,7 +16,7 @@
 
 另外以太坊的价格逻辑没有加进去... 
 
-最后第二封邮件的文字里面加个单位吧，"the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ amount +" </b>.", 末尾加上单位。
+最后第二封邮件的文字里面加个单位吧，"the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ amount +" </b>.", 末尾加上单位。[done]
 
 哦还有，现在的 requestSync 如果 http 请求出错整个应用都挂掉了，这个能不能解决一下... async 的 request 会不会好点?
 
