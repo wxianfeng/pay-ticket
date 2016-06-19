@@ -169,9 +169,16 @@ function start() {
             }
 
           })
-        } else if (category == 'bther') {
-          request("http://api.etherscan.io/api?module=account&action=balance&address="+ address +"&tag=latest&apikey=2UCZJ8BPCIJU7C24BPVX59JDHTRTDUS4GD", function (error, response, body) {
+        } else if (category == 'ether') {
+          console.log("coming");
+          request("http://api.etherscan.io/api?module=account&action=balance&address="+ ele.address +"&tag=latest&apikey=2UCZJ8BPCIJU7C24BPVX59JDHTRTDUS4GD", function (error, response, body) {
+            if (error)
+              console.log(error);
+
+            console.log(body);
             var result = JSON.parse(body).result;
+
+            console.log(result);
 
             var get_amount = parseFloat(result) / Math.pow(10,18);
 
@@ -205,7 +212,10 @@ function start() {
 
             } else if (now_t - created_at_t > 24 * 3600 * 1000) { // over 24hrs, set expired
               setState(ele.id, "expired");
+            } else {
+              connection.end();
             }
+
 
           })
 
