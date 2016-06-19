@@ -119,7 +119,7 @@ function start() {
           // console.log(now_t);
           // console.log(created_at_t);
 
-          var body = 200000000;
+          // var body = 200000000;
 
           var get_amount = parseFloat(body)/100000000;
 
