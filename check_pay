@@ -107,65 +107,110 @@ function start() {
         console.log(ele);
 
         var receiver = ele.email;
+        var category = ele.category;
 
-        request("https://blockchain.info/q/addressbalance/" + ele.address + "?confirmations=1", function (error, response, body) {
-          // console.log(error);
-          // console.log(response);
-          var date = new Date();
-          var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
-          var now_t = Date.parse(date.replace(/-/g, "/")); // m second
-          var created_at_t = Date.parse(ele.created_at.toString().replace(/-/g, "/")); // m second
+        var ticket_name;
 
-          // console.log(now_t);
-          // console.log(created_at_t);
+        if (ele.ticket_cagory == "1") {
+          ticket_name = "WHOLE WEEK";
+        } else if (ele.ticket_cagory == "2") {
+          ticket_name = "DEVCON2";
+        } else if (ele.ticket_cagory == "3") {
+          ticket_name = "SUMMIT";
+        }
 
-          // var body = 200000000;
+        var date = new Date();
+        var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+        var now_t = Date.parse(date.replace(/-/g, "/")); // m second
+        var created_at_t = Date.parse(ele.created_at.toString().replace(/-/g, "/")); // m second
 
-          var get_amount = parseFloat(body)/100000000;
+        if (category == 'bitcoin') {
+          request("https://blockchain.info/q/addressbalance/" + ele.address + "?confirmations=1", function (error, response, body) {
+            // console.log(error);
+            // console.log(response);
 
-          console.log(get_amount);
+            // console.log(now_t);
+            // console.log(created_at_t);
 
-          var ticket_name;
+            // var body = 200000000;
 
-          if (ele.ticket_cagory == "1") {
-            ticket_name = "WHOLE WEEK";
-          } else if (ele.ticket_cagory == "2") {
-            ticket_name = "DEVCON2";
-          } else if (ele.ticket_cagory == "3") {
-            ticket_name = "SUMMIT";
-          }
-          
-          if (get_amount >= parseFloat(ele.fee)) { // 付款成功, 发送第三封邮件
+            var get_amount = parseFloat(body)/100000000;
 
-            connection.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
-              if (err)
-                console.log("get code ==============>" + err);
-              var code = result[0];
+            console.log(get_amount);
+            
+            if (get_amount >= parseFloat(ele.fee)) { // 付款成功, 发送第三封邮件
 
-              var content = [
-              "Dear Guests,",
-              "You’ve ordered the  ticket name "+ ticket_name +" and your payment has been confirmed. The coupon code <b>"+ code.code +"</b> can be used to claim your ticket on our Event Dove page .",
-              "Note: This coupon code can only be used once. Please do not reveal it to anybody else.<br/>",
-              "(This E-mail is sent by an automatic system. Please do not reply directly. )"
-              ].join("<br/>");
+              connection.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
+                if (err)
+                  console.log("get code ==============>" + err);
+                var code = result[0];
 
-              sendThirdMail(receiver, content);
+                var content = [
+                "Dear Guests,",
+                "You’ve ordered the  ticket name "+ ticket_name + " and your payment has been confirmed. The coupon code <b>"+ code.code +"</b> can be used to claim your ticket on our Event Dove page .",
+                "Note: This coupon code can only be used once. Please do not reveal it to anybody else.<br/>",
+                "(This E-mail is sent by an automatic system. Please do not reply directly. )"
+                ].join("<br/>");
 
-              setCodeUsed(code.id);
+                sendThirdMail(receiver, content);
 
-              setState(ele.id, "payed");
+                setCodeUsed(code.id);
 
-              setCode(ele.id, code.code);
+                setState(ele.id, "payed");
 
-              connection.end();
+                setCode(ele.id, code.code);
 
-            })
+                connection.end();
 
-          } else if (now_t - created_at_t > 24 * 3600 * 1000) { // over 24hrs, set expired
-            setState(ele.id, "expired");
-          }
+              })
 
-        })
+            } else if (now_t - created_at_t > 24 * 3600 * 1000) { // over 24hrs, set expired
+              setState(ele.id, "expired");
+            }
+
+          })
+        } else if (category == 'bther') {
+          request("http://api.etherscan.io/api?module=account&action=balance&address="+ address +"&tag=latest&apikey=2UCZJ8BPCIJU7C24BPVX59JDHTRTDUS4GD", function (error, response, body) {
+            var result = JSON.parse(body).result;
+
+            var get_amount = parseFloat(result) / Math.pow(10,18);
+
+            console.log(get_amount);
+            
+            if (get_amount >= parseFloat(ele.fee)) { // 付款成功, 发送第三封邮件
+
+              connection.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
+                if (err)
+                  console.log("get code ==============>" + err);
+                var code = result[0];
+
+                var content = [
+                "Dear Guests,",
+                "You’ve ordered the  ticket name "+ ticket_name +" and your payment has been confirmed. The coupon code <b>"+ code.code +"</b> can be used to claim your ticket on our Event Dove page .",
+                "Note: This coupon code can only be used once. Please do not reveal it to anybody else.<br/>",
+                "(This E-mail is sent by an automatic system. Please do not reply directly. )"
+                ].join("<br/>");
+
+                sendThirdMail(receiver, content);
+
+                setCodeUsed(code.id);
+
+                setState(ele.id, "payed");
+
+                setCode(ele.id, code.code);
+
+                connection.end();
+
+              })
+
+            } else if (now_t - created_at_t > 24 * 3600 * 1000) { // over 24hrs, set expired
+              setState(ele.id, "expired");
+            }
+
+          })
+
+        }
+
 
       }
     }

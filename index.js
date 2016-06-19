@@ -76,18 +76,18 @@ app.post("/save-email", function(req, res){
     "The event will be consist of 3 segments within one week, which are Ethereum DevCon2, Demo Day and 2nd Global Blockchain Summit. Different types of tickets are provided for these segments. The purpose of this E-mail is to connect you with a payment system which allows you to pay for the tickets via Bitcoin or Ether. Please click one of the links below according to the ticket of your choosing, and a payment address for Ether or Bitcoin will be provided. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
     "<b>Pay by Bitcoin</b>",
     "<b>Ticket for DevCon2</b>",
-    domain + "/verify?token="+ "{token}" +"&category=bitcoin&ticket_category=2",
+    domain + "/verify?token="+ "#token#" +"&category=bitcoin&ticket_category=2",
     "<b>Ticket for Demo Day and 2nd Global Blockchain Summit Ticket</b>",
-    domain + "/verify?token="+ "{token}" +"&category=bitcoin&ticket_category=3",
+    domain + "/verify?token="+ "#token#" +"&category=bitcoin&ticket_category=3",
     "<b>Ticket for the Whole Week</b>",
-    domain + "/verify?token=" + "{token}" + "&category=bitcoin&ticket_category=1 <br/>",
+    domain + "/verify?token=" + "#token#" + "&category=bitcoin&ticket_category=1 <br/>",
     "<b>Pay by Ether</b>",
     "<b>Ticket for DevCon2</b>",
-    domain + "/verify?token=" + "{token}" + "&category=ether&ticket_category=2",
-    "<b>Ticket for Demo Day and 2nd Global Blockchain Summit</b>",
-    domain + "/verify?token=" + "{token}" + "&category=ether&ticket_category=3",
+    domain + "/verify?token=" + "#token#" + "&category=ether&ticket_category=2",
+    "<b>Ticket for Demo Day and 2nd Global Blockchain Summit </b>",
+    domain + "/verify?token=" + "#token#" + "&category=ether&ticket_category=3",
     "<b>Ticket for the Whole Week</b>",
-    domain + "/verify?token=" + "{token}" + "&category=ether&ticket_category=1 <br/>",
+    domain + "/verify?token=" + "#token#" + "&category=ether&ticket_category=1 <br/>",
     "(This E-mail is sent by an automatic system. Please do not reply directly. )"
     ].join("<br/>");
 
@@ -101,7 +101,7 @@ app.post("/save-email", function(req, res){
         if (err)
           console.log(err);
 
-        content = content.replace(/{token}/g, token);
+        content = content.replace(/#token#/g, token);
 
         sendFirstMail(email, content);
 
@@ -110,7 +110,7 @@ app.post("/save-email", function(req, res){
       var now_t = Date.parse(date.replace(/-/g, "/"));
       var created_at_t = Date.parse(user.created_at.toString().replace(/-/g, "/"));
       if (now_t - created_at_t > 60) {
-        content = content.replace(/{token}/g, user.token);
+        content = content.replace(/#token#/g, user.token);
         sendFirstMail(email, content);
       }
     }
@@ -154,14 +154,16 @@ app.get("/verify", function(req, res) {
         var resp_json = JSON.parse(resp.data);
         var multiple = 1 / parseFloat(resp_json.result.ethbtc);
         var usd = parseInt(multiple * parseFloat(resp_json.result.ethusd));
-        case "1":
-          amount = 1500 / usd;
-          break;
-        case "2":
-          amount = 900 / usd;
-          break;
-        case "3":
-          amount = 900 / usd;
+        switch (ticket_category) {
+          case "1":
+            amount = 1500 / usd;
+            break;
+          case "2":
+            amount = 900 / usd;
+            break;
+          case "3":
+            amount = 900 / usd;
+        }
     }
 
   } else {
@@ -184,16 +186,16 @@ app.get("/verify", function(req, res) {
         var resp_json = JSON.parse(resp.data);
         var multiple = 1 / parseFloat(resp_json.result.ethbtc);
         var usd = parseInt(multiple * parseFloat(resp_json.result.ethusd));
-      switch (ticket_category) {
-        case "1":
-          amount = 2000 / usd;
-          break;
-        case "2":
-          amount = 1200 / usd;
-          break;
-        case "3":
-          amount = 1200 / usd;
-      }
+        switch (ticket_category) {
+          case "1":
+            amount = 2000 / usd;
+            break;
+          case "2":
+            amount = 1200 / usd;
+            break;
+          case "3":
+            amount = 1200 / usd;
+        }
     }
   }
 
