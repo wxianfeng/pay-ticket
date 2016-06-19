@@ -149,7 +149,21 @@ app.get("/verify", function(req, res) {
           var resp = requestSync("http://blockchain.info/tobtc?currency=USD&value=900");
           amount = resp.data;
       }
+    } else if (category == 'ether') {
+        var resp = requestSync("http://api.etherscan.io/api?module=stats&action=ethprice&apikey=2UCZJ8BPCIJU7C24BPVX59JDHTRTDUS4GD");
+        var resp_json = JSON.parse(resp.data);
+        var multiple = 1 / parseFloat(resp_json.result.ethbtc);
+        var usd = parseInt(multiple * parseFloat(resp_json.result.ethusd));
+        case "1":
+          amount = 1500 / usd;
+          break;
+        case "2":
+          amount = 900 / usd;
+          break;
+        case "3":
+          amount = 900 / usd;
     }
+
   } else {
     if (category == 'bitcoin') {
       switch (ticket_category) {
@@ -164,6 +178,21 @@ app.get("/verify", function(req, res) {
         case "3":
           var resp = requestSync("http://blockchain.info/tobtc?currency=USD&value=1200");
           amount = resp.data;
+      }
+    } else if (category == 'ether') {
+        var resp = requestSync("http://api.etherscan.io/api?module=stats&action=ethprice&apikey=2UCZJ8BPCIJU7C24BPVX59JDHTRTDUS4GD");
+        var resp_json = JSON.parse(resp.data);
+        var multiple = 1 / parseFloat(resp_json.result.ethbtc);
+        var usd = parseInt(multiple * parseFloat(resp_json.result.ethusd));
+      switch (ticket_category) {
+        case "1":
+          amount = 2000 / usd;
+          break;
+        case "2":
+          amount = 1200 / usd;
+          break;
+        case "3":
+          amount = 1200 / usd;
       }
     }
   }
