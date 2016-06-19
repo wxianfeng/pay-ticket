@@ -18,7 +18,7 @@
 
 最后第二封邮件的文字里面加个单位吧，"the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ amount +" </b>.", 末尾加上单位。[done]
 
-哦还有，现在的 requestSync 如果 http 请求出错整个应用都挂掉了，这个能不能解决一下... async 的 request 会不会好点?
+哦还有，现在的 requestSync 如果 http 请求出错整个应用都挂掉了，这个能不能解决一下... async 的 request 会不会好点? [done]
 
 最后邮件服务器要怎么配置一下才能避免 Gmail 提示 "Gmail couldn't verify that this message was sent by ..." 要是可以的话希望解决一下。
 

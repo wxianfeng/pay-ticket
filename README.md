@@ -32,13 +32,18 @@ pay ticket by BitCoin
 
   6. import address && import code
   ```
+  first config address_path and code_path in config.js
+
   >./import_address
   >./import_code
   ```
   
   7. start Server
   ```
-  >node index
+  >forever start index
+
+  if forever not command not find
+  >cd App.root/node_modules/forever && npm link
   ```
   now you can visit: http://localhost:3000
   
