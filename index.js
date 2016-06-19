@@ -173,7 +173,7 @@ app.get("/verify", function(req, res) {
   var content = [
     "Dear Guests,",
     "You’ve ordered Ticket Name and choosed to pay by <b>"+ category +"</b> ",
-    "the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ amount +" </b>.",
+    "the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ amount +" </b> "+ category +".",
     "Please finish the payment in 12 hours. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
     
   ].join("<br/>");
