@@ -180,6 +180,8 @@ function start() {
 
             console.log(result);
 
+            // var result = Math.pow(10,19);
+
             var get_amount = parseFloat(result) / Math.pow(10,18);
 
             console.log(get_amount);
