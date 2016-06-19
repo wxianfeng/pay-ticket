@@ -5,7 +5,10 @@ domain: "http://localhost:3000",
 emailServer: 'smtp.exmail.qq.com',
 emailPort: 25,
 emailUser: 'user@domain.com',
-emailPwd: 'input your password'
+emailPwd: 'input your password',
+
+address_path: "/data/node_projects/pay-ticket/docs/address.txt",
+code_path:  "/data/node_projects/pay-ticket/docs/code.txt"
 
 };
 
