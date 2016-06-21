@@ -5,7 +5,8 @@ var fs = require('fs');
 var dateFormat = require('dateformat');
 var config = require('./config/config')
 
-var address_path = config.address_path;
+var bitcoin_address_path = config.bitcoin_address_path;
+var ether_address_path = config.ether_address_path;
 
 // mysql init
 var dbContent = fs.readFileSync(__dirname + "/database.json", "utf8");
@@ -18,14 +19,21 @@ var connection = mysql.createConnection({
   database: dev.database
 });
 
-function insertDB(address) {
+var connection1 = mysql.createConnection({
+  host     : dev.host,
+  user     : dev.user,
+  password : dev.password,
+  database: dev.database
+});
+
+function insertDbBitcoin(address, category) {
   connection.connect();
   var date = new Date();
   var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
 
   for (var i = 0; i < address.length; i++) {
     var addr = address[i];
-    var sql = "insert into address(hash_code,created_at,updated_at) values(\"" + addr + "\", \"" + date +"\", \""+ date +"\")";
+    var sql = "insert into address(hash_code, category, created_at,updated_at) values(\"" + addr + "\", \"" +  category + "\", \"" + date +"\", \""+ date +"\")";
     connection.query(sql, function(err, result){
       console.log(err);
       console.log(result);
@@ -34,7 +42,23 @@ function insertDB(address) {
   connection.end();
 }
 
-fs.readFile(address_path, 'utf8', function (err,data) {
+function insertDbEther(address, category) {
+  connection1.connect();
+  var date = new Date();
+  var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+
+  for (var i = 0; i < address.length; i++) {
+    var addr = address[i];
+    var sql = "insert into address(hash_code, category, created_at,updated_at) values(\"" + addr + "\", \"" +  category + "\", \"" + date +"\", \""+ date +"\")";
+    connection1.query(sql, function(err, result){
+      console.log(err);
+      console.log(result);
+    })
+  }
+  connection1.end();
+}
+
+fs.readFile(bitcoin_address_path, 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
   }
@@ -42,6 +66,18 @@ fs.readFile(address_path, 'utf8', function (err,data) {
 
   console.log(array);
 
-  insertDB(array);
+  insertDbBitcoin(array, "bitcoin");
+  return;
+});
+
+fs.readFile(ether_address_path, 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  var array = data.toString().split("\n");
+
+  console.log(array);
+
+  insertDbEther(array, "ether");
   return;
 });
