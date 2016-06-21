@@ -70,7 +70,12 @@ app.post("/save-email", function(req, res){
     var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
 
     var content = [
-    "Dear Guests,",
+    '<body bgcolor="#f6f6f6" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; -webkit-font-smoothing: antialiased; height: 100%; -webkit-text-size-adjust: none; width: 100% !important; margin: 0; padding: 0;">',
+    '<table class="body-wrap" bgcolor="#f6f6f6" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; width: 100%; margin: 0; padding: 20px;"><tr style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">',
+    '<td class="container" bgcolor="#FFFFFF" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; clear: both !important; display: block !important; max-width: 600px !important; Margin: 0 auto; padding: 20px; border: 1px solid #f0f0f0;">',
+    '<div class="content" bgcolor="#FFFFFF" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; display: block; max-width: 600px; margin: 0 auto; padding: 0;">',
+    
+    "Dear Guests,<br/>",
     "You’ve placed an order for tickets of the Shanghai Global Blockchain Week.",
     "(Please ignore this E-mail if you had not ordered such tickets.)",
     "The event will be consist of 3 segments within one week, which are Ethereum DevCon2, Demo Day and 2nd Global Blockchain Summit. Different types of tickets are provided for these segments. The purpose of this E-mail is to connect you with a payment system which allows you to pay for the tickets via Bitcoin or Ether. Please click one of the links below according to the ticket of your choosing, and a payment address for Ether or Bitcoin will be provided. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
@@ -88,7 +93,12 @@ app.post("/save-email", function(req, res){
     domain + "/verify?token=" + "#token#" + "&category=ether&ticket_category=3",
     "<b>Ticket for the Whole Week</b>",
     domain + "/verify?token=" + "#token#" + "&category=ether&ticket_category=1 <br/>",
-    "(This E-mail is sent by an automatic system. Please do not reply directly. )"
+    "(This E-mail is sent by an automatic system. Please do not reply directly. )",
+
+    '</div>',
+    '</td>',
+    '</table>',
+    '</body>'
     ].join("<br/>");
 
     if (result.length == 0) { // email not exist
@@ -202,11 +212,21 @@ app.get("/verify", function(req, res) {
   console.log(amount);
 
   var content = [
-    "Dear Guests,",
+    '<body bgcolor="#f6f6f6" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; -webkit-font-smoothing: antialiased; height: 100%; -webkit-text-size-adjust: none; width: 100% !important; margin: 0; padding: 0;">',
+    '<table class="body-wrap" bgcolor="#f6f6f6" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; width: 100%; margin: 0; padding: 20px;"><tr style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">',
+    '<td class="container" bgcolor="#FFFFFF" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; clear: both !important; display: block !important; max-width: 600px !important; Margin: 0 auto; padding: 20px; border: 1px solid #f0f0f0;">',
+    '<div class="content" bgcolor="#FFFFFF" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; display: block; max-width: 600px; margin: 0 auto; padding: 0;">',
+
+    "Dear Guests,<br/>",
     "You’ve ordered Ticket Name and choosed to pay by <b>"+ category +"</b> ",
     "the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ amount +" </b> "+ category +".",
     "Please finish the payment in 12 hours. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
-    
+
+    "{footer}",
+    '</div>',
+    '</td>',
+    '</table>',
+    '</body>'
   ].join("<br/>");
 
   connection.query("select * from users where token = ?", token, function(err, result) {
@@ -236,9 +256,11 @@ app.get("/verify", function(req, res) {
         } else if (invoice.state == 'unpay') { // 之前未付款, 继续使用这个 address
           address = invoice.address;
           content = content.replace(/{address}/, address);
+          var email_content = content.replace(/{footer}/, '');
+          var html_content = content.replace(/{footer}/, "A copy of this invoice has been sent to your email.");
 
-          sendSecondMail(receiver, content);
-          var html_content = content + "A copy of this invoice has been sent to your email.";
+          sendSecondMail(receiver, email_content);
+          // var html_content = content + "A copy of this invoice has been sent to your email.";
           res.send(html_content);
           return;
         }
@@ -252,9 +274,9 @@ app.get("/verify", function(req, res) {
 
         content = content.replace(/{address}/, address);
 
-        var html_content = content + "A copy of this invoice has been sent to your email.";
+        var html_content = content.replace(/{footer}/, "A copy of this invoice has been sent to your email.");
 
-        var email_content = content + "(This E-mail is sent by an automatic system. Please do not reply directly. )";
+        var email_content = content.replace(/{footer}/, "(This E-mail is sent by an automatic system. Please do not reply directly. )");
 
         sendSecondMail(receiver, email_content);
 
