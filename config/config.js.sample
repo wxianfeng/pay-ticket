@@ -7,7 +7,8 @@ emailPort: 25,
 emailUser: 'user@domain.com',
 emailPwd: 'input your password',
 
-address_path: "/data/node_projects/pay-ticket/docs/address.txt",
+bitcoin_address_path: "/data/node_projects/pay-ticket/docs/bitcoin_address.txt",
+ether_address_path: "/data/node_projects/pay-ticket/docs/ether_address.txt",
 code_path:  "/data/node_projects/pay-ticket/docs/code.txt"
 
 };
