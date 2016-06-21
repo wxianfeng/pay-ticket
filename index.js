@@ -247,7 +247,7 @@ app.get("/verify", function(req, res) {
       console.log("========================>");
 
       // 未找到 invoice 记录, 取个 address, 生成 invoice
-      connection.query("select * from address where state = ? and user_id is NULL limit 1", "unused", function(err, result) {
+      connection.query("select * from address where state = ? and category = ? and user_id is NULL limit 1", ["unused", category], function(err, result) {
         address = result[0].hash_code;
 
         content = content.replace(/{address}/, address);
