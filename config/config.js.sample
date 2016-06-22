@@ -9,7 +9,9 @@ emailPwd: 'input your password',
 
 bitcoin_address_path: "/data/node_projects/pay-ticket/docs/bitcoin_address.txt",
 ether_address_path: "/data/node_projects/pay-ticket/docs/ether_address.txt",
-code_path:  "/data/node_projects/pay-ticket/docs/code.txt"
+devcon2_code_path:  "/data/node_projects/pay-ticket/docs/devcon2_code.txt",
+summit_code_path:  "/data/node_projects/pay-ticket/docs/summit_code.txt",
+wholeweek_code_path:  "/data/node_projects/pay-ticket/docs/wholeweek_code.txt"
 
 };
 

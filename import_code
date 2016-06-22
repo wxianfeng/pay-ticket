@@ -1,24 +1,31 @@
 #!/usr/bin/env node
 
+// devcon2: 2
+// summit: 3
+// wholeweek: 1
+
 var mysql = require('mysql');
 var fs = require('fs');
 var dateFormat = require('dateformat');
 var config = require('./config/config')
 
-var code_path = config.code_path;
+var devcon2_code_path = config.devcon2_code_path;
+var summit_code_path = config.summit_code_path;
+var wholeweek_code_path = config.wholeweek_code_path;
 
 // mysql init
 var dbContent = fs.readFileSync(__dirname + "/database.json", "utf8");
 var databaseCfg = JSON.parse(dbContent);
 var dev = databaseCfg.development;
-var connection = mysql.createConnection({
-  host     : dev.host,
-  user     : dev.user,
-  password : dev.password,
-  database: dev.database
-});
 
-function insertDB(codes) {
+
+function insertDbDevcon2(codes) {
+  var connection = mysql.createConnection({
+    host     : dev.host,
+    user     : dev.user,
+    password : dev.password,
+    database: dev.database
+  });
   connection.connect();
 
   var date = new Date();
@@ -26,7 +33,7 @@ function insertDB(codes) {
 
   for (var i = 0; i < codes.length; i++) {
     var code = codes[i];
-    var sql = "insert into codes(code,created_at,updated_at) values(\"" + code + "\", \"" + date +"\", \""+ date +"\")";
+    var sql = "insert into codes(code, ticket_category, created_at,updated_at) values(\"" + code + "\", \"" + "2" + "\", \"" + date +"\", \""+ date +"\")";
     connection.query(sql, function(err, result){
       console.log(err);
       console.log(result);
@@ -36,7 +43,56 @@ function insertDB(codes) {
   connection.end();
 }
 
-fs.readFile(code_path, 'utf8', function (err,data) {
+function insertDbSummit(codes) {
+  var connection = mysql.createConnection({
+    host     : dev.host,
+    user     : dev.user,
+    password : dev.password,
+    database: dev.database
+  });
+  connection.connect();
+
+  var date = new Date();
+  var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+
+  for (var i = 0; i < codes.length; i++) {
+    var code = codes[i];
+    var sql = "insert into codes(code, ticket_category, created_at,updated_at) values(\"" + code + "\", \"" + "3" + "\", \"" + date +"\", \""+ date +"\")";
+    connection.query(sql, function(err, result){
+      console.log(err);
+      console.log(result);
+    })
+  }
+  
+  connection.end();
+}
+
+function insertDbWholeweek(codes) {
+  var connection = mysql.createConnection({
+    host     : dev.host,
+    user     : dev.user,
+    password : dev.password,
+    database: dev.database
+  });
+  connection.connect();
+
+  var date = new Date();
+  var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+
+  for (var i = 0; i < codes.length; i++) {
+    var code = codes[i];
+    var sql = "insert into codes(code, ticket_category, created_at,updated_at) values(\"" + code + "\", \"" + "1" + "\", \"" + date +"\", \""+ date +"\")";
+    connection.query(sql, function(err, result){
+      console.log(err);
+      console.log(result);
+    })
+  }
+  
+  connection.end();
+}
+
+
+fs.readFile(devcon2_code_path, 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
   }
@@ -44,6 +100,33 @@ fs.readFile(code_path, 'utf8', function (err,data) {
 
   console.log(array);
 
-  insertDB(array);
+  insertDbDevcon2(array);
   return;
 });
+
+
+fs.readFile(summit_code_path, 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  var array = data.toString().split("\n");
+
+  console.log(array);
+
+  insertDbSummit(array);
+  return;
+});
+
+
+fs.readFile(wholeweek_code_path, 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  var array = data.toString().split("\n");
+
+  console.log(array);
+
+  insertDbWholeweek(array);
+  return;
+});
+
