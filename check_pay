@@ -194,13 +194,16 @@ function start() {
 
             console.log(body);
             var result = JSON.parse(body).result;
-            var result = result.substring(0,3);
-
+            if (result.length >= 18) {
+              result = result.substring(result.length - 15, -15);
+            } else { // < 18 位 直接 continue 跳过,处理下一个, 没到 1 ether
+              continue;
+            }
             console.log(result);
 
             // var result = Math.pow(10,19);
 
-            var get_amount = parseFloat(result) / 1000;
+            var get_amount = (parseFloat(result) + 1) / 1000;
 
             console.log(get_amount);
             
