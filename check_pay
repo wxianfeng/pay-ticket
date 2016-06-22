@@ -26,19 +26,19 @@ var smtpConfig = {
 var transporter = nodemailer.createTransport(smtpConfig);
 
 function setState(id, state) {
-  var connection = mysql.createConnection({
+  var connection1 = mysql.createConnection({
     host     : dev.host,
     user     : dev.user,
     password : dev.password,
     database: dev.database
   });
 
-  connection.connect();
-  connection.query("update invoices set state = \"" + state + "\" where id=?", id, function(err, result){
+  connection1.connect();
+  connection1.query("update invoices set state = \"" + state + "\" where id=?", id, function(err, result){
     if (err)
       console.log(err);
   });
-  connection.end();
+  connection1.end();
 }
 
 function sendThirdMail(receiver, email_content) {
@@ -55,37 +55,37 @@ function sendThirdMail(receiver, email_content) {
 }
 
 function setCodeUsed(id) {
-  var connection = mysql.createConnection({
+  var connection2 = mysql.createConnection({
     host     : dev.host,
     user     : dev.user,
     password : dev.password,
     database: dev.database
   });
 
-  connection.connect();
-  connection.query("update codes set state = ? where id = "+ id +"", "used", function(err, result){
+  connection2.connect();
+  connection2.query("update codes set state = ? where id = "+ id +"", "used", function(err, result){
     if (err)
       console.log(err);
   })
-  connection.end();
+  connection2.end();
 }
 
 function setCode(id, code) {
-  var connection = mysql.createConnection({
+  var connection3 = mysql.createConnection({
     host     : dev.host,
     user     : dev.user,
     password : dev.password,
     database: dev.database
   });
 
-  connection.connect();
+  connection3.connect();
 
-  connection.query("update invoices set code = \"" + code + "\" where id=?", id, function(err, result){
+  connection3.query("update invoices set code = \"" + code + "\" where id=?", id, function(err, result){
     if (err)
       console.log(err);
   });
 
-  connection.end();
+  connection3.end();
 }
 
 function start() {
@@ -140,7 +140,14 @@ function start() {
             
             if (get_amount >= parseFloat(ele.fee)) { // 付款成功, 发送第三封邮件
 
-              connection.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
+              var connection9 = mysql.createConnection({
+                host     : dev.host,
+                user     : dev.user,
+                password : dev.password,
+                database: dev.database
+              });
+
+              connection9.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
                 if (err)
                   console.log("get code ==============>" + err);
                 var code = result[0];
@@ -170,7 +177,7 @@ function start() {
 
                 setCode(ele.id, code.code);
 
-                connection.end();
+                connection9.end();
 
               })
 
@@ -199,7 +206,14 @@ function start() {
             
             if (get_amount >= parseFloat(ele.fee)) { // 付款成功, 发送第三封邮件
 
-              connection.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
+              var connection10 = mysql.createConnection({
+                host     : dev.host,
+                user     : dev.user,
+                password : dev.password,
+                database: dev.database
+              });
+
+              connection10.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
                 if (err)
                   console.log("get code ==============>" + err);
                 var code = result[0];
@@ -219,7 +233,7 @@ function start() {
 
                 setCode(ele.id, code.code);
 
-                connection.end();
+                connection10.end();
 
               })
 
@@ -236,6 +250,8 @@ function start() {
 
 
       }
+
+      connection.end();
     } else {
       connection.end();
     } 
