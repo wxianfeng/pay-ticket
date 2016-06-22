@@ -78,7 +78,7 @@ app.post("/save-email", function(req, res){
     "Dear Guests,<br/>",
     "You’ve placed an order for tickets of the Shanghai Global Blockchain Week.",
     "(Please ignore this E-mail if you had not ordered such tickets.)",
-    "The event will be consist of 3 segments within one week, which are Ethereum DevCon2, Demo Day and 2nd Global Blockchain Summit. Different types of tickets are provided for these segments. The purpose of this E-mail is to connect you with a payment system which allows you to pay for the tickets via Bitcoin or Ether. Please click one of the links below according to the ticket of your choosing, and a payment address for Ether or Bitcoin will be provided. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the <a href=\"http://blockchainweek2016-usd.eventdove.com\" Event Dove website </a>.<br/>",
+    "The event will be consist of 3 segments within one week, which are Ethereum DevCon2, Demo Day and 2nd Global Blockchain Summit. Different types of tickets are provided for these segments. The purpose of this E-mail is to connect you with a payment system which allows you to pay for the tickets via Bitcoin or Ether. Please click one of the links below according to the ticket of your choosing, and a payment address for Ether or Bitcoin will be provided. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the <a href=\"http://blockchainweek2016-usd.eventdove.com\"> Event Dove website </a>.<br/>",
     "<b>Pay by Bitcoin</b>",
     "<b>Ticket for DevCon2</b>",
     domain + "/verify?token="+ "#token#" +"&category=bitcoin&ticket_category=2",
@@ -223,7 +223,7 @@ app.get("/verify", function(req, res) {
     "You’ve ordered Ticket Name and choosed to pay by <b>"+ category +"</b> ",
     "the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ "{amount}" +" </b> "+ category +".",
     "Please finish the payment within 12 hours, this invoice will expire at "+ date_utc +" UTC ("+ date +" Beijing Time).",
-    "Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove <a href=\"http://blockchainweek2016-usd.eventdove.com\" Event Dove website </a>.<br/>",
+    "Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove <a href=\"http://blockchainweek2016-usd.eventdove.com\"> Event Dove website </a>.<br/>",
 
     "{footer}",
     '</div>',
