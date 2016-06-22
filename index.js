@@ -251,7 +251,7 @@ app.get("/verify", function(req, res) {
 
       if (result.length != 0) { // 找到 invoice 记录
         if (invoice.state == 'payed') { // 已经付款
-          res.send("you have payed");
+          res.send("you have paid");
           return;
         } else if (invoice.state == 'unpay') { // 之前未付款, 继续使用这个 address
           address = invoice.address;
