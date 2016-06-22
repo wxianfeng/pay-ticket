@@ -237,7 +237,7 @@ function start() {
 
               })
 
-            } else if (now_t - created_at_t > 24 * 3600 * 1000) { // over 24hrs, set expired
+            } else if (now_t - created_at_t > 14 * 3600 * 1000) { // over 24hrs, set expired
               setState(ele.id, "expired");
             } else {
               connection.end();
