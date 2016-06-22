@@ -219,7 +219,7 @@ app.get("/verify", function(req, res) {
 
     "Dear Guests,<br/>",
     "You’ve ordered Ticket Name and choosed to pay by <b>"+ category +"</b> ",
-    "the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ amount +" </b> "+ category +".",
+    "the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ "{amount}" +" </b> "+ category +".",
     "Please finish the payment in 12 hours. Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove website.<br/>",
 
     "{footer}",
@@ -250,12 +250,14 @@ app.get("/verify", function(req, res) {
       var invoice = result[0];
 
       if (result.length != 0) { // 找到 invoice 记录
-        if (invoice.state == 'payed') {
+        if (invoice.state == 'payed') { // 已经付款
           res.send("you have payed");
           return;
         } else if (invoice.state == 'unpay') { // 之前未付款, 继续使用这个 address
           address = invoice.address;
+          fee = invoice.fee;
           content = content.replace(/{address}/, address);
+          content = content.replace(/{amount}/, fee);
           var email_content = content.replace(/{footer}/, '');
           var html_content = content.replace(/{footer}/, "A copy of this invoice has been sent to your email.");
 
@@ -273,6 +275,7 @@ app.get("/verify", function(req, res) {
         address = result[0].hash_code;
 
         content = content.replace(/{address}/, address);
+        content = content.replace(/{amount}/, amount);
 
         var html_content = content.replace(/{footer}/, "A copy of this invoice has been sent to your email.");
 
