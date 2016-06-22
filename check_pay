@@ -134,7 +134,7 @@ function start() {
 
             // var body = 200000000;
 
-            var get_amount = Math.floor(parseFloat(body)/100000000);
+            var get_amount = parseFloat(body)/100000000;
 
             console.log(get_amount);
             
@@ -200,7 +200,7 @@ function start() {
 
             // var result = Math.pow(10,19);
 
-            var get_amount = Math.floor(parseFloat(result) / 1000);
+            var get_amount = parseFloat(result) / 1000;
 
             console.log(get_amount);
             
