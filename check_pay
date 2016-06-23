@@ -160,7 +160,7 @@ function start() {
                 '<div class="content" bgcolor="#FFFFFF" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; display: block; max-width: 600px; margin: 0 auto; padding: 0;">',
 
                 "Dear Guests,<br/>",
-                "You’ve ordered the  ticket name "+ ticket_name + " and your payment has been confirmed. The coupon code <b>"+ code.code +"</b> can be used to claim your ticket on our Event Dove page .",
+                "You’ve ordered the  ticket name "+ ticket_name + " and your payment has been confirmed. The coupon code <b>"+ code.code +"</b> can be used to claim your ticket on our <a href=\"http://blockchainweek2016-usd.eventdove.com\">Event Dove page</a> .",
                 "Note: This coupon code can only be used once. Please do not reveal it to anybody else.<br/>",
                 "(This E-mail is sent by an automatic system. Please do not reply directly. )",
 

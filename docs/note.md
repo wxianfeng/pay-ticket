@@ -32,7 +32,30 @@
 
 时间有点紧了，今天晚上能弄?
 
-第一封邮件里有 &amp;
+第一封邮件里有 &amp; [done]
+
+导出 csv 那个你做了么？
+
+还有一个小问题，就是 index.js 里面，有两个 res.send
+
+res.send({ code: 1, msg: 'email format is error' });
+res.send({ code: 0 });
+
+第一个改成 "Wrong email format."
+第二个改成 "Please check your email for further instructions." [done]
+
+
+最后第二封邮件里面
+"You’ve ordered Ticket Name and choosed to pay by <b>"+ category +"</b> ",
+
+"Ticket Name" 这个地方要替换成具体的票的名字...
+
+具体票的名字参见 https://github.com/wxianfeng/pay-ticket/blob/master/index.js#L83-L94
+
+另外 https://github.com/wxianfeng/pay-ticket/blob/master/index.js#L85
+这个地方末尾 Ticket 那个单词去掉
+
+最后，第三封邮件让你加 Event Dove 的链接... 你给以太坊的加上了，比特币的没有加上。（在代码里搜索 Dove 就能看见）
 ```
 
 ## 查询 bitcoin 付款信息

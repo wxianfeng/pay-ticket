@@ -57,7 +57,7 @@ app.post("/save-email", function(req, res){
   var email = req.param('email');
   if (/^(.+)@(.+)$/.test(email)) {
   } else {
-    res.send({ code: 1, msg: 'email format is error' });
+    res.send({ code: 1, msg: 'Wrong email format.' });
     return;
   }
 
@@ -82,14 +82,14 @@ app.post("/save-email", function(req, res){
     "<b>Pay by Bitcoin</b>",
     "<b>Ticket for DevCon2</b>",
     domain + "/verify?token="+ "#token#" +"&category=bitcoin&ticket_category=2",
-    "<b>Ticket for Demo Day and 2nd Global Blockchain Summit Ticket</b>",
+    "<b>Ticket for Demo Day and 2nd Global Blockchain Summit</b>",
     domain + "/verify?token="+ "#token#" +"&category=bitcoin&ticket_category=3",
     "<b>Ticket for the Whole Week</b>",
     domain + "/verify?token=" + "#token#" + "&category=bitcoin&ticket_category=1 <br/>",
     "<b>Pay by Ether</b>",
     "<b>Ticket for DevCon2</b>",
     domain + "/verify?token=" + "#token#" + "&ticket_category=2&category=ether",
-    "<b>Ticket for Demo Day and 2nd Global Blockchain Summit </b>",
+    "<b>Ticket for Demo Day and 2nd Global Blockchain Summit</b>",
     domain + "/verify?token=" + "#token#" + "&ticket_category=3&category=ether",
     "<b>Ticket for the Whole Week</b>",
     domain + "/verify?token=" + "#token#" + "&ticket_category=1&category=ether <br/>",
@@ -125,7 +125,7 @@ app.post("/save-email", function(req, res){
       }
     }
 
-    res.send({ code: 0 });
+    res.send({ code: 0, msg: 'Please check your email for further instructions.' });
     
   });
 
@@ -145,6 +145,17 @@ app.get("/verify", function(req, res) {
   var date = new Date();
   var date_utc = dateFormat(date, "UTC:yyyy-mm-dd h:MM:ss");
   var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+
+  switch (ticket_category) {
+  case "1":
+    ticket_name = "Ticket for the Whole Week";
+    break;
+  case "2":
+    ticket_name = "Ticket for DevCon2";
+    break;
+  case "3":
+    ticket_name = "Ticket for Demo Day and 2nd Global Blockchain Summit";
+  }
 
   if (date <= "2016-07-31 24:00:00") {
     if (category == 'bitcoin') {
@@ -220,7 +231,7 @@ app.get("/verify", function(req, res) {
     '<div class="content" bgcolor="#FFFFFF" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; display: block; max-width: 600px; margin: 0 auto; padding: 0;">',
 
     "Dear Guests,<br/>",
-    "You’ve ordered Ticket Name and choosed to pay by <b>"+ category +"</b> ",
+    "You’ve ordered " + ticket_name + " and choosed to pay by <b>"+ category +"</b> ",
     "the payment address is <b>"+ "{address}" +"</b> , the amount should be <b>"+ "{amount}" +" </b> "+ category +".",
     "Please finish the payment within 12 hours, this invoice will expire at "+ date_utc +" UTC ("+ date +" Beijing Time).",
     "Once the payment is confirmed (1 confirmation for Bitcoin, 10 confirmations for Ether), a coupon code will be provided to this E-mail address which can be used to claim the ticket on our event page on the Event Dove <a href=\"http://blockchainweek2016-usd.eventdove.com\"> Event Dove website </a>.<br/>",
