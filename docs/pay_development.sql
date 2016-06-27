@@ -20,6 +20,7 @@ CREATE TABLE `codes` (
   `user_id` int(11) DEFAULT NULL,
   `state` varchar(255) DEFAULT 'unused',
   `code` varchar(255) DEFAULT NULL,
+  `ticket_category` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
