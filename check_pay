@@ -196,7 +196,7 @@ function start() {
             console.log(body);
             var result = JSON.parse(body).result;
             if (result.length >= 18) {
-              result = result.substring(result.length - 15, -15);
+              result = result.substr(0, result.length - 15);
             } else { // < 18 位 直接 continue 跳过,处理下一个, 没到 1 ether
               return;
             }
