@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+var mysql = require('mysql');
+var fs = require('fs');
+var dateFormat = require('dateformat');
+var config = require('./config/config')
+var nodemailer = require('nodemailer');
+
+var bitcoin_address_path = config.bitcoin_address_path;
+var ether_address_path = config.ether_address_path;
+
+// mysql init
+var dbContent = fs.readFileSync(__dirname + "/database.json", "utf8");
+var databaseCfg = JSON.parse(dbContent);
+var dev = databaseCfg.development;
+var connection = mysql.createConnection({
+  host     : dev.host,
+  user     : dev.user,
+  password : dev.password,
+  database: dev.database
+});
+
+// email init
+var smtpConfig = {
+    host: config.emailServer,
+    port: config.emailPort,
+    auth: {
+      user: config.emailUser,
+      pass: config.emailPwd
+    }
+};
+var transporter = nodemailer.createTransport(smtpConfig);
+
+var date = new Date();
+var date = dateFormat(date, "yyyy-mm-dd");
+
+filename = date + ".csv"
+
+connection.query("select * from invoices where state = 'payed'", function(err, result){
+  // console.log(err);
+  console.log(result);
+  for (var i = 0; i < result.length; i++) {
+    var result = result[i];
+    row = result.id + "," + result.user_id + "," + result.email + "," + result.fee + "," + result.category + "," + result.ticket_category + "," + result.address + "," + result.code + "," + result.state + "," + result.created_at;
+    fs.writeFileSync(filename, row, 'utf8');
+  }
+
+  var mailOptions = {
+    from: '"Pay-Ticket" <' + config.emailUser + '>',
+    to: config.receiver,
+    subject: 'all payed user.',
+    attachments: {   // file on disk as an attachment
+      filename: date + ".csv",
+      path: filename // stream this file
+    }
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    console.log('Message sent: ' + info.response);
+  });
+
+})
+
+// fs.writeFileSync(filename, str, 'utf8');
+
+connection.end();

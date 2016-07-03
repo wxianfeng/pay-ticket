@@ -11,7 +11,9 @@ bitcoin_address_path: "/data/node_projects/pay-ticket/docs/bitcoin_address.txt",
 ether_address_path: "/data/node_projects/pay-ticket/docs/ether_address.txt",
 devcon2_code_path:  "/data/node_projects/pay-ticket/docs/devcon2_code.txt",
 summit_code_path:  "/data/node_projects/pay-ticket/docs/summit_code.txt",
-wholeweek_code_path:  "/data/node_projects/pay-ticket/docs/wholeweek_code.txt"
+wholeweek_code_path:  "/data/node_projects/pay-ticket/docs/wholeweek_code.txt",
+
+receiver: "522096432@qq.com"
 
 };
 

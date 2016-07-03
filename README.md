@@ -50,7 +50,7 @@ pay ticket by BitCoin
   8. config crontab
   ```
   *     *    *   *    *   /path/to/check_pay # every 10minutes execute 1 time
-  *     1    *   *    *   /path/export_csv  # every day 1:00AM execute
+  *     1    *   *    *   /path/to/export_csv  # every day 1:00AM execute
   ```
 
 That's ALL, Enjoy it!
