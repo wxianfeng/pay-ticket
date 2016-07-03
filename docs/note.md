@@ -6,7 +6,7 @@
 ```
 现在还有几点。Email, 要检查一下。现在随便填什么都可以... [done]
 另外 Email 提交了一次就不会再发邮件，这个感觉不太好。用时间检查一下吧，如果两次提交间隔超过 60s 就重发一次。 [done]
-另外邮件的 HTML 能稍微整好看点么，就是昨天说的, 现在是 plain text
+另外邮件的 HTML 能稍微整好看点么，就是昨天说的, 现在是 plain text [done]
 
 兄弟，还有几件事。
 
@@ -34,7 +34,7 @@
 
 第一封邮件里有 &amp; [done]
 
-导出 csv 那个你做了么？
+导出 csv 那个你做了么？[done]
 
 还有一个小问题，就是 index.js 里面，有两个 res.send
 
@@ -53,9 +53,19 @@ res.send({ code: 0 });
 具体票的名字参见 https://github.com/wxianfeng/pay-ticket/blob/master/index.js#L83-L94
 
 另外 https://github.com/wxianfeng/pay-ticket/blob/master/index.js#L85
-这个地方末尾 Ticket 那个单词去掉
+这个地方末尾 Ticket 那个单词去掉 [done]
 
-最后，第三封邮件让你加 Event Dove 的链接... 你给以太坊的加上了，比特币的没有加上。（在代码里搜索 Dove 就能看见）
+最后，第三封邮件让你加 Event Dove 的链接... 你给以太坊的加上了，比特币的没有加上。（在代码里搜索 Dove 就能看见）[done]
+
+
+console.log('Message sent: ' + info.response);
+                                       ^
+TypeError: Cannot read property 'response' of undefined
+发邮件那里遇到这个 Error
+https://github.com/wxianfeng/pay-ticket/blob/master/index.js#L335
+应该是没有加 error handling 的缘故...
+额，异步的话可以直接看 function(error, info) 里面那个 error 吧，需要 catch 么  [done]
+
 ```
 
 ## 查询 bitcoin 付款信息
