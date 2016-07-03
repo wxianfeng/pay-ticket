@@ -332,6 +332,10 @@ function sendFirstMail(receiver, email_content) {
   };
 
   transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+      return;
+    }
     console.log('Message sent: ' + info.response);
   });
 }
@@ -345,6 +349,10 @@ function sendSecondMail(receiver, email_content) {
   };
 
   transporter.sendMail(mailOptions, function(error, info) {
+    if (error) {
+      console.log(error);
+      return;
+    }
     console.log('Message sent: ' + info.response);
   });
 }
