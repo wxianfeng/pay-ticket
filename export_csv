@@ -56,6 +56,11 @@ connection.query("select * from invoices where state = 'payed'", function(err, r
   };
 
   transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+      return;
+    }
+
     console.log('Message sent: ' + info.response);
   });
 
