@@ -108,15 +108,15 @@ function start() {
 
         var receiver = ele.email;
         var category = ele.category;
-        var ticket_cagory = ele.ticket_cagory;
+        var ticket_category = ele.ticket_category;
 
         var ticket_name;
 
-        if (ele.ticket_cagory == "1") {
+        if (ele.ticket_category == "1") {
           ticket_name = "WHOLE WEEK";
-        } else if (ele.ticket_cagory == "2") {
+        } else if (ele.ticket_category == "2") {
           ticket_name = "DEVCON2";
-        } else if (ele.ticket_cagory == "3") {
+        } else if (ele.ticket_category == "3") {
           ticket_name = "SUMMIT";
         }
 
@@ -148,7 +148,7 @@ function start() {
                 database: dev.database
               });
 
-              connection9.query("select * from codes where state = ? and ticket_cagory = ? limit 1", ["unused", ticket_cagory], function(err, result) {
+              connection9.query("select * from codes where state = ? and ticket_category = ? limit 1", ["unused", ticket_category], function(err, result) {
                 if (err)
                   console.log("get code ==============>" + err);
                 var code = result[0];
