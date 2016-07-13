@@ -326,7 +326,7 @@ function sendFirstMail(receiver, email_content) {
   var mailOptions = {
     from: '"Pay-Ticket" <' + config.emailUser + '>',
     to: receiver,
-    subject: 'You’ve placed an order for tickets of the Shanghai Global Blockchain Week.',
+    subject: "You've placed an order for tickets of the Shanghai Global Blockchain Week.",
     html: email_content
   };
 
