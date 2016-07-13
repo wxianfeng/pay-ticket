@@ -18,7 +18,10 @@ if (date2 <= "2016-07-31 24:00:00") {
   console.log(false); // puts false
 }
 
+
 var date3 = new Date();
 console.log(date3.toUTCString());
-var date3_utc = dateFormat(date3, "UTC:yyyy-mm-dd h:MM:ss");
-console.log(date3_utc);
+var date3_utc = dateFormat(date3, "UTC:yyyy-mm-dd HH:MM:ss");
+console.log(date3_utc); // 2016-07-13 1:39:05
+var date_beijing = dateFormat(date3, "yyyy-mm-dd HH:MM:ss");
+console.log(date_beijing); // 2016-07-13 9:39:05

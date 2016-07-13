@@ -143,8 +143,8 @@ app.get("/verify", function(req, res) {
   var address;
   var amount;
   var date = new Date();
-  var date_utc = dateFormat(date, "UTC:yyyy-mm-dd h:MM:ss");
-  var date = dateFormat(date, "yyyy-mm-dd h:MM:ss");
+  var date_utc = dateFormat(date, "UTC:yyyy-mm-dd HH:MM:ss");
+  var date = dateFormat(date, "yyyy-mm-dd HH:MM:ss");
 
   switch (ticket_category) {
   case "1":
