@@ -206,8 +206,7 @@ app.get("/verify", function(req, res) {
     } else if (category == 'ether') {
         var resp = requestSync("http://api.etherscan.io/api?module=stats&action=ethprice&apikey=2UCZJ8BPCIJU7C24BPVX59JDHTRTDUS4GD");
         var resp_json = JSON.parse(resp.data);
-        var multiple = 1 / parseFloat(resp_json.result.ethbtc);
-        var usd = parseInt(multiple * parseFloat(resp_json.result.ethusd));
+        var usd = parseFloat(resp_json.result.ethusd);
         switch (ticket_category) {
           case "1":
             amount = 2000 / usd;
