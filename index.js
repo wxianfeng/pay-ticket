@@ -142,6 +142,7 @@ app.get("/verify", function(req, res) {
 
   var address;
   var amount;
+  process.env.TZ = 'Asia/Shanghai';
   var date = new Date();
   var date_utc = dateFormat(date, "UTC:yyyy-mm-dd HH:MM:ss");
   var date = dateFormat(date, "yyyy-mm-dd HH:MM:ss");
