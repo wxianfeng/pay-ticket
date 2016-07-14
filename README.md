@@ -53,4 +53,10 @@ pay ticket by BitCoin
   *     1    *   *    *   /path/to/export_csv  # every day 1:00AM execute
   ```
 
+  9. if timezone not +0800, set timezone
+  ```
+  vi ~/.bash_profile
+  TZ='Asia/Shanghai'; export TZ
+  ```
+
 That's ALL, Enjoy it!
