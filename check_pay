@@ -36,7 +36,7 @@ function setState(id, state) {
   connection1.connect();
   connection1.query("update invoices set state = \"" + state + "\" where id=?", id, function(err, result){
     if (err)
-      console.log(err);
+      console.log("update invoices state error: " + err);
 
     connection1.end();
   });
@@ -53,11 +53,11 @@ function sendThirdMail(receiver, email_content) {
 
   transporter.sendMail(mailOptions, function(error, info) {
     if (error) {
-      console.log(error);
+      console.log("send third mail error: " + error);
       return;
     }
     
-    console.log('Message sent: ' + info.response);
+    console.log('Third Message sent: ' + info.response);
   });
 }
 
@@ -72,7 +72,7 @@ function setCodeUsed(id) {
   connection2.connect();
   connection2.query("update codes set state = ? where id = "+ id +"", "used", function(err, result){
     if (err)
-      console.log(err);
+      console.log("update code state error: " +  err);
 
     connection2.end();
   })
@@ -91,7 +91,7 @@ function setCode(id, code) {
 
   connection3.query("update invoices set code = \"" + code + "\" where id=?", id, function(err, result){
     if (err)
-      console.log(err);
+      console.log("update invoices code error: " + err);
     connection3.end();
   });
   
@@ -108,7 +108,7 @@ function start() {
   connection.connect();
   connection.query("select * from invoices where state = \""+ "unpay" +"\"", {}, function(err, result){
     if (err)
-      console.log(err);
+      console.log("select invoices error: " + err);
 
     if (result.length > 0) {
       for (var i = 0; i < result.length; i++) {
@@ -197,25 +197,25 @@ function start() {
 
           })
         } else if (category == 'ether') {
-          console.log("coming");
           request("http://api.etherscan.io/api?module=account&action=balance&address="+ ele.address +"&tag=latest&apikey=2UCZJ8BPCIJU7C24BPVX59JDHTRTDUS4GD", function (error, response, body) {
             if (error)
-              console.log(error);
+              console.log("ether pay:" + error);
 
-            console.log(body);
+            console.log("ether pay response:" + body);
             var result = JSON.parse(body).result;
             if (result.length >= 18) {
               result = result.substr(0, result.length - 15);
             } else { // < 18 位 直接 continue 跳过,处理下一个, 没到 1 ether
+              console.log("ether not 1 amount: "+ result);
               return;
             }
-            console.log(result);
+            console.log("ether response result: " + result);
 
             // var result = Math.pow(10,19);
 
             var get_amount = (parseFloat(result) + 1) / 1000;
 
-            console.log(get_amount);
+            console.log("ether get_amount: " +get_amount);
             
             if (get_amount >= parseFloat(ele.fee)) { // 付款成功, 发送第三封邮件
 
