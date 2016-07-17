@@ -57,6 +57,7 @@ pay ticket by BitCoin
   ```
   vi ~/.bash_profile
   TZ='Asia/Shanghai'; export TZ
+  source ~/.bash_profile
   ```
 
 That's ALL, Enjoy it!
