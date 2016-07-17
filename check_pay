@@ -7,6 +7,7 @@ var dateFormat = require('dateformat');
 
 var config = require('./config/config')
 var nodemailer = require('nodemailer');
+var sleep = require('sleep');
 
 var dbContent = fs.readFileSync(__dirname + "/database.json", "utf8");
 var databaseCfg = JSON.parse(dbContent);
@@ -111,8 +112,10 @@ function start() {
       console.log("select invoices error: " + err);
 
     if (result.length > 0) {
-      for (var i = 0; i < result.length; i++) {
-        var ele = result[i];
+      result.forEach(function(ele) {
+
+        sleep.sleep(10);
+
         console.log(ele);
 
         var receiver = ele.email;
@@ -262,7 +265,8 @@ function start() {
         }
 
 
-      }
+
+      });
 
       connection.end();
     } else {
