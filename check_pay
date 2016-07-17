@@ -37,8 +37,10 @@ function setState(id, state) {
   connection1.query("update invoices set state = \"" + state + "\" where id=?", id, function(err, result){
     if (err)
       console.log(err);
+
+    connection1.end();
   });
-  connection1.end();
+  
 }
 
 function sendThirdMail(receiver, email_content) {
@@ -71,8 +73,10 @@ function setCodeUsed(id) {
   connection2.query("update codes set state = ? where id = "+ id +"", "used", function(err, result){
     if (err)
       console.log(err);
+
+    connection2.end();
   })
-  connection2.end();
+  
 }
 
 function setCode(id, code) {
@@ -88,9 +92,9 @@ function setCode(id, code) {
   connection3.query("update invoices set code = \"" + code + "\" where id=?", id, function(err, result){
     if (err)
       console.log(err);
+    connection3.end();
   });
-
-  connection3.end();
+  
 }
 
 function start() {
