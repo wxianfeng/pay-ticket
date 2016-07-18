@@ -7,6 +7,7 @@ function setI(i) {
   console.log(i);
 }
 
+// 每次都是输出 10
 for (var i = 0; i < 10; i++) {
   // console.log(i);
 
@@ -27,6 +28,7 @@ var arr = [1,2,3,4,5,6,7,8,9,10];
 
   // console.log(i);
 
+// 输出 1 - 10
 arr.forEach(function(i) {
   // sleep.sleep(1);
 

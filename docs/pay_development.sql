@@ -43,6 +43,8 @@ CREATE TABLE `invoices` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+ALTER TABLE `invoices` ADD UNIQUE unq_user_id_categoty_ticket_category ( `user_id`, `category`, `ticket_category` );
+
 
 DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE `migrations` (
