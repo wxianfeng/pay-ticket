@@ -111,8 +111,9 @@ function start() {
     if (err)
       console.log("select invoices error: " + err);
 
+    var codes = result;
     if (result.length > 0) {
-      result.forEach(function(ele) {
+      result.forEach(function(ele, i) {
 
         sleep.sleep(10);
 
@@ -160,10 +161,10 @@ function start() {
                 database: dev.database
               });
 
-              connection9.query("select * from codes where state = ? and ticket_category = ? limit 1", ["unused", ticket_category], function(err, result) {
+              connection9.query("select * from codes where state = ? and ticket_category = ? limit ?", ["unused", ticket_category, codes.length], function(err, result) {
                 if (err)
                   console.log("get code ==============>" + err);
-                var code = result[0];
+                var code = result[i];
 
                 var content = [
                 '<body bgcolor="#f6f6f6" style="font-family: \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; -webkit-font-smoothing: antialiased; height: 100%; -webkit-text-size-adjust: none; width: 100% !important; margin: 0; padding: 0;">',
@@ -229,10 +230,10 @@ function start() {
                 database: dev.database
               });
 
-              connection10.query("select * from codes where state = ? limit 1", "unused", function(err, result) {
+              connection10.query("select * from codes where state = ? and ticket_category = ? limit ?", ["unused", ticket_category, codes.length], function(err, result) {
                 if (err)
                   console.log("get code ==============>" + err);
-                var code = result[0];
+                var code = result[i];
 
                 var content = [
                 "Dear Guests,",
