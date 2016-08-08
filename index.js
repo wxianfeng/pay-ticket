@@ -274,7 +274,9 @@ app.get("/verify", function(req, res) {
           var email_content = content.replace(/{footer}/, '');
           var html_content = content.replace(/{footer}/, "A copy of this invoice has been sent to your email.");
 
-          sendSecondMail(receiver, email_content);
+          if (invoice.secondmail_sended != "1")
+            sendSecondMail(receiver, email_content);
+          
           // var html_content = content + "A copy of this invoice has been sent to your email.";
           res.send(html_content);
           return;
@@ -294,12 +296,46 @@ app.get("/verify", function(req, res) {
 
         var email_content = content.replace(/{footer}/, "(This E-mail is sent by an automatic system. Please do not reply directly. )");
 
-        sendSecondMail(receiver, email_content);
+        // sendSecondMail(receiver, email_content);
+
+
 
         var invoice_sql = "insert into invoices(user_id, email, address, fee, category, ticket_category, created_at, updated_at) values("+ user_id +",\"" + receiver + "\",\"" + address +"\",\""+ amount +"\",\""+ category +"\",\""+ ticket_category +"\",\""+ date +"\",\""+ date +"\")";
         connection.query(invoice_sql, function(err, result){
           if (err)
             console.log(err);
+
+          var invoice = result;
+          console.log("first insert invoice: ");
+          console.log(result);
+
+
+          var mailOptions = {
+            from: '"Pay-Ticket" <'+ config.emailUser +'>',
+            to: receiver, 
+            subject: 'Please finish the payment for the ticket of Shanghai Blockchain Week.', // Subject line
+            html: email_content
+          };
+
+          transporter.sendMail(mailOptions, function(error, info) {
+            if (error) {
+              console.log(error);
+              return;
+            }
+            console.log('Message sent: ' + info.response);
+
+            if ( /250/.test(info.response) ) {
+              connection.query("update invoices set secondmail_sended = ? where id = ?", ["1", invoice.insertId], function(err, result){
+                if (err) 
+                  console.log(err);
+              });
+            }
+
+
+          });
+
+
+
         });
 
         setAddressUsed(result[0].id);

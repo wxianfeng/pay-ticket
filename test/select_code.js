@@ -25,12 +25,8 @@ function setCodeUsed(id) {
 
 var arr = [1,2,3];
 
-  // console.log(i);
-
 // 输出 1 - 10
 arr.forEach(function(ele, i) {
-
-  
 
   var connection9 = mysql.createConnection({
     host     : dev.host,
@@ -40,9 +36,7 @@ arr.forEach(function(ele, i) {
   });
   connection9.connect();
 
-  connection9.query("select * from codes where state = ? and ticket_category = ? limit ? LOCK IN SHARE MODE", ["unused", 1, arr.length], function(err, result) {
-    // sleep.sleep(2);
-    // console.log(result);
+  connection9.query("select * from codes where state = ? and ticket_category = ? limit ?", ["unused", 1, arr.length], function(err, result) {
 
     console.log(i);
     console.log(result[i].id);
